@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Notes — Micro-prototype A/B/C</title>
+<style>
+:root{
+  --bg:#f4f5f7; --card:#fff; --ink:#16181d; --muted:#6b7280; --line:#e3e6ea;
+  --accent:#2f6feb; --accent-soft:#eaf1fe; --warn:#b45309; --warn-soft:#fef6e7;
+  --ai:#6d3bd1; --ai-soft:#f2ecfd; --ok:#0f7b46; --ok-soft:#e7f5ee;
+  --r:10px; --shadow:0 1px 2px rgba(16,24,40,.06),0 4px 12px rgba(16,24,40,.05);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 64px}
+
+/* ---------- SHARED CHROME ---------- */
+header{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);z-index:9}
+.bar{max-width:720px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px}
+.logo{font-weight:700;letter-spacing:-.2px}
+.badge{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;
+  background:var(--accent-soft);color:var(--accent)}
+.spacer{flex:1}
+.reset{font-size:13px;border:1px solid var(--line);background:var(--card);color:var(--muted);
+  padding:6px 12px;border-radius:99px;cursor:pointer}
+.reset:hover{color:var(--ink);border-color:var(--muted)}
+
+/* ---------- SHARED COMPONENTS ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px;box-shadow:var(--shadow);margin:14px 0}
+h1{font-size:21px;margin:24px 0 6px;letter-spacing:-.3px}
+h2{font-size:16px;margin:0 0 10px}
+.sub{color:var(--muted);font-size:14px;margin:0 0 18px}
+.label{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.note{border:1px solid var(--line);border-radius:8px;padding:11px 13px;margin:8px 0;background:var(--card)}
+.note .meta{font-size:12px;color:var(--muted);display:flex;gap:8px;margin-bottom:5px}
+.note .body{font-size:14px}
+.src{font-size:11px;border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;border:1px solid var(--accent);
+  color:var(--accent);background:var(--accent-soft);border-radius:99px;padding:2px 9px;
+  cursor:pointer;margin:4px 4px 0 0}
+.chip:hover{background:#dbe7fd}
+.btn{font:inherit;font-size:14px;font-weight:600;border:0;border-radius:8px;padding:9px 16px;
+  cursor:pointer;background:var(--accent);color:#fff}
+.btn:hover{filter:brightness(1.07)}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line);font-weight:500}
+.btn.ghost:hover{color:var(--ink);border-color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.ai-block{background:var(--ai-soft);border:1px solid #ddd0f7;border-radius:var(--r);padding:14px}
+.ai-tag{font-size:11px;font-weight:700;color:var(--ai);letter-spacing:.4px;margin-bottom:8px}
+.scope{font-size:12.5px;color:var(--muted);background:#fff;border:1px dashed var(--line);
+  border-radius:8px;padding:9px 11px;margin-bottom:12px}
+.uncert{font-size:13px;color:var(--warn);background:var(--warn-soft);
+  border:1px solid #f3ddb4;border-radius:8px;padding:9px 11px;margin-top:12px}
+.reason{font-size:12.5px;color:var(--muted);font-style:italic;margin-top:6px}
+.ok{font-size:13px;color:var(--ok);background:var(--ok-soft);border:1px solid #c3e6d3;
+  border-radius:8px;padding:9px 11px;margin:12px 0}
+input[type=text]{width:100%;font:inherit;padding:11px 13px;border:1px solid var(--line);
+  border-radius:8px;background:var(--card)}
+input[type=text]:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
+.opt-pick{display:block;width:100%;text-align:left;font:inherit;background:var(--card);
+  border:1.5px solid var(--line);border-radius:8px;padding:11px 13px;margin:7px 0;cursor:pointer}
+.opt-pick:hover{border-color:var(--accent);background:var(--accent-soft)}
+.opt-pick b{display:block;font-size:14px}
+.opt-pick span{font-size:12.5px;color:var(--muted)}
+.hidden{display:none}
+.pending{font-size:11px;font-weight:700;color:var(--warn);background:var(--warn-soft);
+  border:1px solid #f3ddb4;border-radius:4px;padding:1px 6px;letter-spacing:.3px}
+.divider{border:0;border-top:1px solid var(--line);margin:18px 0}
+.small{font-size:12.5px;color:var(--muted)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:#16181d;color:#fff;
+  font-size:13px;padding:10px 16px;border-radius:99px;box-shadow:var(--shadow);z-index:20}
+.entry{display:block;width:100%;text-align:left;font:inherit;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--r);padding:15px;margin:10px 0;cursor:pointer;
+  box-shadow:var(--shadow)}
+.entry:hover{border-color:var(--accent)}
+.entry b{font-size:15px}.entry p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header><div class="bar">
+  <span class="logo">AI Notes</span>
+  <span class="badge" id="badge">Bắt đầu</span>
+  <span class="spacer"></span>
+  <button class="reset" onclick="reset()">↺ Về màn hình bắt đầu</button>
+</div></header>
+
+<div class="wrap">
+
+<!-- ================= COMMON CONTEXT (dùng chung cho A/B/C) ================= -->
+<section id="s-context">
+  <h1>Trước khi bắt đầu</h1>
+  <p class="sub">Đọc phần này rồi chọn phiên bản mà người hướng dẫn chỉ định.</p>
+  <div class="card">
+    <div class="label">Bạn là ai</div>
+    <p id="c-who"></p>
+    <p id="c-habit"></p>
+    <p id="c-when"></p>
+    <hr class="divider">
+    <div class="label">Việc bạn cần làm</div>
+    <p id="c-task" style="font-weight:600"></p>
+    <p class="small" id="c-outcome"></p>
+  </div>
+  <div class="card">
+    <div class="label">12 note của bạn</div>
+    <p class="small">Đây là toàn bộ note bạn đã ghi. Cả ba phiên bản dùng chung đúng bộ note này.</p>
+    <div id="c-notes"></div>
+  </div>
+  <div class="label" style="margin-top:22px">Chọn phiên bản</div>
+  <button class="entry" onclick="go('a')"><b>Phiên bản A</b><p>Mở phiên bản A</p></button>
+  <button class="entry" onclick="go('b')"><b>Phiên bản B</b><p>Mở phiên bản B</p></button>
+  <button class="entry" onclick="go('c')"><b>Phiên bản C</b><p>Mở phiên bản C</p></button>
+</section>
+
+<!-- ================= OPTION A ================= -->
+<section id="s-a" class="hidden">
+  <!-- A1 -->
+  <div id="a1">
+    <h1>Tìm lại trong note của bạn</h1>
+    <p class="sub">Hỏi bằng lời của bạn.</p>
+    <div class="card">
+      <div class="scope">Mình tìm trong <b>12 note của bạn</b>, không tìm trên internet.
+        Chỉ tìm được thứ bạn đã ghi — nếu bạn chưa ghi thì mình không có gì để trả lời.</div>
+      <input type="text" id="a-q" placeholder="Hỏi bằng lời của bạn…" onkeydown="if(event.key==='Enter')aAsk('auto')">
+      <div class="row">
+        <button class="btn" onclick="aAsk('auto')">Hỏi</button>
+      </div>
+      <div class="label" style="margin-top:16px">Hoặc thử</div>
+      <div>
+        <span class="chip" onclick="aAsk('main')">Mình ghi gì về chuẩn hoá?</span>
+        <span class="chip" onclick="aAsk('miss')">Ví dụ tách bảng BCNF ở slide 12 là gì?</span>
+      </div>
+    </div>
+  </div>
+  <!-- A2 -->
+  <div id="a2" class="hidden">
+    <h1>Kết quả</h1>
+    <p class="sub" id="a-echo"></p>
+    <div class="card"><div class="ai-block">
+      <div class="ai-tag">AI TỔNG HỢP TỪ NOTE CỦA BẠN</div>
+      <div id="a-answer"></div>
+      <div class="uncert" id="a-uncert"></div>
+    </div>
+    <div class="row">
+      <button class="btn ghost" id="a-raw-btn" data-mode="target" onclick="aRaw()">Xem note thô thay vì câu trả lời</button>
+      <button class="btn ghost" onclick="show('a1')">Hỏi câu khác</button>
+    </div></div>
+  </div>
+  <!-- A3 -->
+  <div id="a3" class="hidden">
+    <h1 id="a3-title">Note gốc</h1>
+    <p class="sub">Đây là nguyên văn note bạn đã ghi.</p>
+    <div class="card"><div id="a-detail"></div>
+    <div class="row"><button class="btn ghost" onclick="show('a2')">← Quay lại câu trả lời</button></div></div>
+  </div>
+  <!-- A-escalation (Don't Act) -->
+  <div id="a4" class="hidden">
+    <h1>Mình không tìm được</h1>
+    <p class="sub" id="a-echo2"></p>
+    <div class="card"><div class="ai-block">
+      <div class="ai-tag">AI</div>
+      <div id="a-none-body"></div>
+    </div>
+    <div class="label" style="margin-top:16px">Bạn có thể</div>
+    <div class="row">
+      <button class="btn" onclick="toast('(mô phỏng) Mở slide 12 buổi 06/08 trên V-Learn')">Mở slide gốc trên V-Learn</button>
+      <button class="btn ghost" onclick="toast('(mô phỏng) Soạn tin nhắn hỏi bạn cùng lớp')">Hỏi bạn cùng lớp</button>
+      <button class="btn ghost" onclick="show('a1')">Hỏi câu khác</button>
+    </div></div>
+  </div>
+</section>
+
+<!-- ================= OPTION B ================= -->
+<section id="s-b" class="hidden">
+  <!-- B1 -->
+  <div id="b1">
+    <h1>Bạn vừa ghi xong một note</h1>
+    <p class="sub">Buổi học hôm nay, 18/08.</p>
+    <div class="card">
+      <div class="note"><div class="meta"><span>18/08</span><span class="src">Notepad</span></div>
+        <div class="body" id="b-newnote"></div></div>
+      <div class="ai-block" style="margin-top:14px">
+        <div class="ai-tag">AI ĐỀ XUẤT CHỦ ĐỀ <span class="pending">CHƯA LƯU</span></div>
+        <p class="small">AI đoán từ chữ trong note. Nhãn chỉ được lưu khi bạn xác nhận.</p>
+        <p class="small" style="margin-bottom:2px"><b>Mình không chắc giữa hai chủ đề này:</b></p>
+        <button class="opt-pick" onclick="bConfirm('Phụ thuộc hàm')">
+          <b>Phụ thuộc hàm</b>
+          <span>vì note nhắc tới “X → Y”, trùng với note bạn ghi ngày 28/07</span></button>
+        <button class="opt-pick" onclick="bConfirm('Chuẩn hoá CSDL')">
+          <b>Chuẩn hoá CSDL</b>
+          <span>vì note nhắc tới “dạng chuẩn 3” và “bắc cầu”, trùng với note ngày 04/08</span></button>
+        <button class="opt-pick" onclick="bConfirm(null)">
+          <b>Để mình tự đặt sau</b><span>không gắn nhãn nào lúc này</span></button>
+      </div>
+    </div>
+  </div>
+  <!-- B2 -->
+  <div id="b2" class="hidden">
+    <h1>Đã lưu</h1>
+    <div class="card">
+      <div class="ok" id="b-result"></div>
+      <div id="b-linked"></div>
+      <div class="row">
+        <button class="btn" onclick="bHub()">Mở trang chủ đề</button>
+        <button class="btn ghost" onclick="bUndo()">Hoàn tác / sửa nhãn</button>
+      </div>
+    </div>
+  </div>
+  <!-- B3 -->
+  <div id="b3" class="hidden">
+    <h1 id="b-hub-title">Chủ đề</h1>
+    <p class="sub">Mọi note cùng chủ đề, xếp theo thời gian.</p>
+    <div class="card"><div id="b-hub"></div></div>
+    <div class="card">
+      <div class="label">Tìm không theo nhãn</div>
+      <p class="small">Dùng khi nhãn sai hoặc bạn không nhớ chủ đề. Đường này không phụ thuộc vào AI.</p>
+      <div class="row">
+        <button class="btn ghost" onclick="bBrowse('date')">Duyệt theo ngày</button>
+        <button class="btn ghost" onclick="bBrowse('Notepad')">Chỉ Notepad</button>
+        <button class="btn ghost" onclick="bBrowse('App ĐT')">Chỉ app điện thoại</button>
+      </div>
+      <div id="b-browse"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= OPTION C ================= -->
+<section id="s-c" class="hidden">
+  <!-- C1 -->
+  <div id="c1">
+    <h1>Màn hình chính</h1>
+    <p class="sub">Bạn không cần tìm gì cả. Cứ ở đây một lát.</p>
+    <div class="card">
+      <div class="label">Môn đang học</div>
+      <p><b>Nhập môn Cơ sở dữ liệu</b><br><span class="small">Buổi tiếp theo: 20/08 · Kiểm tra: tuần sau</span></p>
+    </div>
+    <div id="c-card-slot"></div>
+  </div>
+  <!-- C2 -->
+  <div id="c2" class="hidden">
+    <h1>3 điều bạn đã ghi về Chuẩn hoá CSDL</h1>
+    <p class="sub" id="c-why2"></p>
+    <div class="card"><div class="ai-block">
+      <div class="ai-tag">AI TÓM TẮT LẠI TỪ NOTE CỦA BẠN</div>
+      <div id="c-summary"></div>
+    </div>
+    <div class="label" style="margin-top:16px">Note gốc</div>
+    <div id="c-origin"></div>
+    <div class="row">
+      <button class="btn" onclick="cDone('known')">Mình thuộc rồi</button>
+      <button class="btn ghost" onclick="cDone('later')">Nhắc lại sau</button>
+      <button class="btn ghost" onclick="cDone('off')">Đừng nhắc chủ đề này nữa</button>
+    </div></div>
+  </div>
+  <!-- C3 -->
+  <div id="c3" class="hidden">
+    <h1 id="c3-title">Đã ghi nhận</h1>
+    <div class="card">
+      <div class="ok" id="c-result"></div>
+      <hr class="divider">
+      <div class="label">Thẻ đã bỏ qua</div>
+      <p class="small">Mọi thẻ bạn dẹp đều nằm đây, không mất đi.</p>
+      <div id="c-skipped"></div>
+      <div class="row"><button class="btn ghost" onclick="cBack()">← Về màn hình chính</button></div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script src="fixture.js"></script>
+<script>
+/* ---------- shared render helpers (dùng chung cả 3 option) ---------- */
+const $ = id => document.getElementById(id);
+function noteHTML(n){
+  return `<div class="note"><div class="meta"><span>${n.date}</span>
+    <span class="src">${n.src}</span>${n.topic?`<span>· ${n.topic}</span>`:''}</div>
+    <div class="body">${n.text}</div></div>`;
+}
+function renderNotes(el, arr){ el.innerHTML = arr.map(noteHTML).join(''); }
+function toast(msg){
+  const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t); setTimeout(()=>t.remove(),2200);
+}
+const SCREENS=['s-context','s-a','s-b','s-c'];
+const STATES=['a1','a2','a3','a4','b1','b2','b3','c1','c2','c3'];
+function show(state){
+  STATES.forEach(s=>$(s).classList.add('hidden'));
+  $(state).classList.remove('hidden'); window.scrollTo(0,0);
+}
+function go(opt){
+  SCREENS.forEach(s=>$(s).classList.add('hidden'));
+  $('s-'+opt).classList.remove('hidden');
+  $('badge').textContent='Phiên bản '+opt.toUpperCase();
+  if(opt==='a') show('a1');
+  if(opt==='b'){ bReset(); show('b1'); }
+  if(opt==='c'){ cReset(); show('c1'); cArm(); }
+  window.scrollTo(0,0);
+}
+function reset(){
+  SCREENS.forEach(s=>$(s).classList.add('hidden'));
+  $('s-context').classList.remove('hidden');
+  $('badge').textContent='Bắt đầu';
+  if(cTimer) clearTimeout(cTimer);
+  window.scrollTo(0,0);
+}
+
+/* ---------- common context ---------- */
+$('c-who').textContent=CONTEXT.who; $('c-habit').textContent=CONTEXT.habit;
+$('c-when').textContent=CONTEXT.when; $('c-task').textContent=CONTEXT.task;
+$('c-outcome').textContent=CONTEXT.outcome;
+renderNotes($('c-notes'), NOTES);
+
+/* ================= OPTION A ================= */
+const byId = id => NOTES.find(n=>n.id===id);
+
+/* bỏ dấu để tester gõ có dấu hay không dấu đều được */
+function aNorm(s){
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\u0111/g,'d');
+}
+
+/* phân loại ý định câu hỏi — thứ tự quan trọng: 'miss' phải xét trước 'main' */
+function aIntent(q){
+  const n = aNorm(q);
+  if(!n) return 'main';
+  if(/bcnf|slide 12|tach bang|vi du tach/.test(n)) return 'miss';
+  if(/chuan hoa|1nf|2nf|3nf|dang chuan|bac cau|da tri/.test(n)) return 'main';
+  return 'search';
+}
+
+/* tìm thật trong 12 note: đếm số từ khớp, lấy tối đa 3 note */
+function aSearch(q){
+  const words = aNorm(q).split(/\s+/).filter(w=>w.length>2);
+  if(!words.length) return [];
+  return NOTES
+    .map(n => ({ n, score: words.filter(w => aNorm(n.text+' '+n.topic).includes(w)).length }))
+    .filter(x => x.score > 0)
+    .sort((a,b) => b.score - a.score)
+    .slice(0,3)
+    .map(x => x.n);
+}
+
+function aAsk(kind){
+  const typed = $('a-q').value.trim();
+  const intent = (kind === 'auto') ? aIntent(typed) : kind;
+  const echo = '“' + (typed || (kind==='miss'
+      ? 'Ví dụ tách bảng BCNF ở slide 12 là gì?'
+      : 'Mình ghi gì về chuẩn hoá?')) + '”';
+
+  if(intent === 'miss'){ aNone(echo, 'bcnf'); return; }
+  if(intent === 'main'){ aMain(echo); return; }
+
+  const hits = aSearch(typed);
+  if(!hits.length){ aNone(echo, 'empty'); return; }
+  aFromSearch(echo, hits);
+}
+
+/* Câu trả lời tổng hợp cho chủ đề chính — có cài lỗi kiểm chứng được ở ý 3 */
+function aMain(echo){
+  $('a-echo').textContent = echo;
+  $('a-answer').innerHTML = `
+    <p><b>1NF</b> là loại bỏ thuộc tính đa trị. Bạn còn để lại một câu hỏi chưa trả lời:
+       vì sao 2NF đòi phụ thuộc <i>đầy đủ</i> vào khoá chính.
+       <span class="chip" onclick="aOpen('n6')">Note 04/08 · Notepad</span></p>
+    <p><b>3NF</b> là bỏ phụ thuộc bắc cầu, ví dụ MaSV → MaLop → TenLop.
+       <span class="chip" onclick="aOpen('n7')">Note 04/08 · App ĐT</span></p>
+    <p><b>BCNF</b> chặt hơn 3NF, có một ví dụ tách bảng ở slide 12.
+       <span class="chip" onclick="aOpen('n8')">Note 06/08 · Notepad</span></p>`;
+  $('a-uncert').innerHTML = `Mình chắc về ý 1 và ý 2. <b>Ý 3 mình chỉ đọc được tiêu đề</b> —
+    bấm vào nguồn của ý đó để xem bạn thực sự đã ghi những gì.`;
+  $('a-raw-btn').dataset.mode = 'target';
+  show('a2');
+}
+
+/* Câu hỏi ngoài chủ đề chính: ghép lại từ note tìm được, KHÔNG giải thích thêm */
+function aFromSearch(echo, hits){
+  $('a-echo').textContent = echo;
+  $('a-answer').innerHTML = hits.map(n =>
+    `<p>${n.text} <span class="chip" onclick="aOpen('${n.id}')">Note ${n.date} · ${n.src}</span></p>`
+  ).join('');
+  $('a-uncert').innerHTML = `Mình <b>chỉ ghép lại nguyên văn</b> ${hits.length} note khớp với câu hỏi,
+    không giải thích thêm — vì bạn chưa ghi gì ngoài chỗ này.`;
+  $('a-raw-btn').dataset.mode = hits.map(n=>n.id).join(',');
+  show('a2');
+}
+
+/* Don't Act — không bịa, chuyển sang escalation */
+function aNone(echo, why){
+  $('a-echo2').textContent = echo;
+  $('a-none-body').innerHTML = (why === 'bcnf')
+    ? `<p>Trong 12 note của bạn không có nội dung này. Note ngày <b>06/08</b> có nhắc tới slide 12
+         nhưng chính bạn ghi là <b>“để chép lại sau — CHƯA CHÉP”</b>.</p>
+       <p class="small">Mình không tự nghĩ ra ví dụ đó, vì như vậy bạn sẽ ôn theo thứ không phải thầy dạy.</p>`
+    : `<p>Mình không tìm thấy note nào của bạn khớp với câu hỏi này.</p>
+       <p class="small">Mình chỉ đọc được 12 note bạn đã ghi. Mình không tự viết ra nội dung mới,
+          vì như vậy bạn sẽ ôn theo thứ không phải thầy dạy.</p>`;
+  show('a4');
+}
+
+function aOpen(id){
+  const n = byId(id);
+  $('a3-title').textContent = 'Note gốc · ' + n.date;
+  $('a-detail').innerHTML = noteHTML(n) + (id === 'n8'
+    ? `<div class="uncert">Note này chưa hoàn chỉnh — chính bạn đã ghi “CHƯA CHÉP”.
+       Câu trả lời phía trên không thể đầy đủ hơn note gốc.</div>` : '');
+  show('a3');
+}
+
+function aRaw(){
+  const mode = $('a-raw-btn').dataset.mode || 'target';
+  const arr = (mode === 'target')
+    ? NOTES.filter(n => n.role === 'target')
+    : mode.split(',').map(byId);
+  $('a3-title').textContent = arr.length + ' note thô';
+  $('a-detail').innerHTML = arr.map(noteHTML).join('');
+  show('a3');
+}
+
+/* ================= OPTION B ================= */
+let bLabel=null;
+function bReset(){ bLabel=null; $('b-browse').innerHTML=''; $('b-newnote').textContent=NEW_NOTE.text; }
+function bConfirm(label){
+  bLabel=label;
+  const linked = label ? NOTES.filter(n=>n.topic===label) : [];
+  if(!label){
+    $('b-result').innerHTML='Đã lưu note, <b>chưa gắn chủ đề nào</b>. Note này sẽ không xuất hiện ở trang chủ đề nào cả.';
+    $('b-linked').innerHTML='';
+  } else {
+    $('b-result').innerHTML=`Đã gắn chủ đề <b>${label}</b> · nối với <b>${linked.length} note cũ</b>.`;
+    $('b-linked').innerHTML='<div class="label" style="margin-top:12px">Đã nối với</div>'
+      + (linked.length? linked.map(noteHTML).join('') : '<p class="small">Không có note cũ nào.</p>');
+  }
+  show('b2');
+}
+function bUndo(){ toast('Đã hoàn tác nhãn'); show('b1'); }
+function bHub(){
+  const label = bLabel || 'Chưa có chủ đề';
+  $('b-hub-title').textContent = 'Chủ đề: '+label;
+  const inHub = bLabel ? NOTES.filter(n=>n.topic===bLabel) : [];
+  const newN = {...NEW_NOTE, topic:bLabel};
+  $('b-hub').innerHTML = (bLabel? [...inHub,newN] : [newN]).map(noteHTML).join('')
+    + (bLabel!=='Chuẩn hoá CSDL'
+      ? `<div class="uncert">Trang này chỉ hiện note mang nhãn “${label}”.
+         Nếu một note bị gắn nhãn khác, nó <b>không xuất hiện ở đây</b> và bạn sẽ không biết là mình đang thiếu nó.</div>`
+      : '');
+  show('b3');
+}
+function bBrowse(mode){
+  const arr = mode==='date' ? [...NOTES].reverse() : NOTES.filter(n=>n.src===mode);
+  $('b-browse').innerHTML = '<hr class="divider">'
+    + `<div class="label">${mode==='date'?'Mới nhất trước':'Nguồn: '+mode} · ${arr.length} note</div>`
+    + arr.map(noteHTML).join('');
+}
+
+/* ================= OPTION C ================= */
+let cTimer=null, cSkipped=[];
+function cReset(){ $('c-card-slot').innerHTML=''; $('c-skipped').innerHTML=''; cSkipped=[]; }
+function cArm(){
+  if(cTimer) clearTimeout(cTimer);
+  cTimer = setTimeout(()=>{
+    $('c-card-slot').innerHTML = `
+      <div class="card" style="border-color:#ddd0f7">
+        <div class="ai-tag">AI ĐƯA LẠI CHO BẠN</div>
+        <h2 style="margin:4px 0 6px">3 điều bạn ghi 2 tuần trước về <b>Chuẩn hoá CSDL</b></h2>
+        <p class="reason">3 note bạn ghi 04/08–06/08 · vì tuần sau kiểm tra và bạn chưa mở lại chủ đề này lần nào.</p>
+        <p class="small">Mình chọn theo ngày ghi và lịch môn — mình không biết bạn đã thuộc hay chưa.</p>
+        <div class="row">
+          <button class="btn" onclick="cOpen()">Xem</button>
+          <button class="btn ghost" onclick="cSkip()">Để sau</button>
+        </div>
+      </div>`;
+    window.scrollTo(0,document.body.scrollHeight);
+  }, 2600);
+}
+function cOpen(){
+  $('c-why2').textContent='Vì tuần sau kiểm tra và bạn chưa mở lại chủ đề này lần nào.';
+  $('c-summary').innerHTML=`
+    <p>• <b>1NF</b> — loại bỏ thuộc tính đa trị. Bạn có một câu hỏi bỏ ngỏ về 2NF.</p>
+    <p>• <b>3NF</b> — bỏ phụ thuộc bắc cầu: MaSV → MaLop → TenLop.</p>
+    <p>• <b>BCNF</b> — chặt hơn 3NF; note của bạn ghi “CHƯA CHÉP” ví dụ ở slide 12.</p>`;
+  $('c-origin').innerHTML = NOTES.filter(n=>n.role==='target').map(noteHTML).join('');
+  show('c2');
+}
+function cSkip(){
+  cSkipped.push('3 điều về Chuẩn hoá CSDL · bỏ qua '+TODAY);
+  cDone('skip');
+}
+function cDone(kind){
+  const msg={
+    known:'Đã đánh dấu <b>thuộc rồi</b>. Mình sẽ không đưa lại chủ đề này trong 30 ngày tới.',
+    later:'Được. Mình sẽ nhắc lại <b>trước buổi 20/08</b>.',
+    off:'Đã tắt nhắc cho chủ đề <b>Chuẩn hoá CSDL</b>. Bạn bật lại được trong cài đặt.',
+    skip:'Đã để sau. Thẻ này nằm trong danh sách bên dưới.'
+  }[kind];
+  $('c3-title').textContent = kind==='off' ? 'Đã tắt' : 'Đã ghi nhận';
+  $('c-result').innerHTML = msg;
+  if(kind!=='skip') cSkipped.push('3 điều về Chuẩn hoá CSDL · '+kind+' '+TODAY);
+  $('c-skipped').innerHTML = cSkipped.length
+    ? cSkipped.map(s=>`<div class="note"><div class="body">${s}</div></div>`).join('')
+    : '<p class="small">Chưa có thẻ nào.</p>';
+  show('c3');
+}
+function cBack(){ show('c1'); cArm(); }
+</script>
+</body>
+</html>
