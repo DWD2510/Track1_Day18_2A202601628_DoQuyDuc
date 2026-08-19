@@ -34,21 +34,10 @@
 
 ---
 
-## OPTION C — Resurface without search
+## OPTION C — Resurface without search *(option nhóm đã chốt)*
 
-**We expect the tester to:** ngồi yên ~3 giây, thấy thẻ tự hiện, mở ra xem, rồi chọn một trong ba quyết định.
-
-**Watch for:**
-- Phản ứng đầu tiên khi thẻ tự nhảy ra: hữu ích hay bị làm phiền? Ghi **nguyên văn** câu đầu tiên tester nói.
-- Có đọc dòng lý do đẩy (*"vì tuần sau kiểm tra và bạn chưa mở lại"*) không?
-- Chọn gì: Xem / Để sau / Mình thuộc rồi / Đừng nhắc nữa? Hỏi vì sao.
-- Có ai thấy khó chịu vì **không tự quyết được lúc nào nội dung xuất hiện** không?
-- Có ai để ý danh sách *"thẻ đã bỏ qua"* không?
-- Đối chiếu với F6 Day 17 (*"không cần xem lại nhiều"*): tester có nói gì tương tự không?
-
-**Do not explain:** rằng thẻ sẽ tự hiện sau vài giây (để tester tự gặp); rằng có danh sách thẻ đã bỏ qua; rằng AI không biết tester đã thuộc hay chưa.
-
----
+> Hình thức: **thẻ ôn nhanh tự đến → mở thành bộ 4 flashcard**. Chi tiết đầy đủ ở mục cuối file.
+> Cơ chế không đổi so với design sheet: AI vẫn tự chọn **cái gì** và **khi nào**.
 
 ## Nhắc chung cho cả ba
 
@@ -65,3 +54,40 @@
 | Tester 1 | A → B → C |
 | Tester 2 | B → C → A |
 | Tester 3 | C → A → B |
+
+---
+
+# OPTION C — chi tiết bộ flashcard
+
+> Chạy ở `index.html` → *Phiên bản C*, hoặc `option-c-flashcard.html` khi trình bày riêng.
+> Cả hai nạp cùng `option-c.js` nên **ba tester chắc chắn nhìn thấy đúng một phiên bản**.
+>
+> Thẻ ôn nhanh tự đến **rồi mở thành 4 flashcard**. Cơ chế không đổi — AI vẫn chọn **cái gì** và **khi nào**. Flashcard chỉ là **hình thức** của nội dung được đẩy lại. Nếu tester tự đi tìm bộ thẻ thì C đã tụt về A/B, nên **thẻ vẫn phải tự hiện**.
+
+**We expect the tester to:** ngồi yên ~3 giây · thấy thẻ ôn nhanh tự hiện · bấm *Ôn ngay* · lật thẻ · tự chấm *Nhớ / Mơ hồ / Chưa nhớ* · đi hết 4 thẻ.
+
+**Bốn thẻ và mỗi thẻ đo cái gì**
+
+| Thẻ | Sinh từ note | Cài gì vào | Đo điều gì |
+|---|---|---|---|
+| 1 | n6 · 04/08 · 1NF | thẻ "sạch" | Baseline — tester có lật, có đọc chip nguồn không |
+| 2 | n7 · 04/08 · 3NF | thẻ "sạch" | Nhịp đã quen, tester bắt đầu bấm nhanh chưa |
+| 3 | n5 · 28/07 · Phụ thuộc hàm | **AI kéo một note ngoài chủ đề vào bộ**, có ghi rõ lý do | Tester có nhận ra thẻ lạc đề không? Có dùng nút *gỡ khỏi bộ* không? Hay chấm luôn cho xong? |
+| 4 | n8 · 06/08 · BCNF | **Thẻ không có đáp án** — chính user ghi "CHƯA CHÉP" | Một thẻ trống là hữu ích (biết mình thiếu gì trước kiểm tra) hay bực mình? Có bấm *Mở slide 12* không? |
+
+**Watch for:**
+- **Nguyên văn câu nói đầu tiên** khi thẻ tự nhảy ra — ghi y hệt, không diễn giải.
+- Có đọc dòng lý do đẩy (*"vì tuần sau kiểm tra và bạn chưa mở lại"*) trước khi bấm không?
+- Có bấm **chip nguồn** để đối chiếu note gốc, hay tin thẳng mặt sau thẻ?
+- Đến thẻ 3: nói gì? Nếu tester nhận ra lạc đề — hỏi *"bạn biết bằng cách nào?"*
+- Đến thẻ 4: phản ứng với thẻ **không có đáp án**. Đây là quan sát quan trọng nhất của bản này.
+- Tự chấm *Nhớ rồi* — hỏi lại *"bạn nhớ thật hay bấm cho xong?"* để đối chiếu với dòng limit ở màn hình cuối.
+- Có ai để ý danh sách **thẻ đã bỏ qua** không?
+- Đối chiếu F6 Day 17 (*"không cần xem lại nhiều"*): tester có nói gì tương tự không?
+
+**Do not explain:** thẻ sẽ tự hiện · thẻ 3 lạc đề · thẻ 4 không có đáp án · có nút gỡ thẻ · có danh sách thẻ đã bỏ qua · vì sao AI không tự viết ví dụ BCNF.
+
+**Câu hỏi chốt sau khi xong bộ thẻ:**
+1. *"Vừa rồi bạn làm gì? Vì sao?"*
+2. *"Nếu cái này tự hiện mỗi ngày thì sao?"*
+3. *"Trade-off bạn chấp nhận là gì — được nhắc mà không phải đi tìm, đổi lại không tự chọn được lúc nào?"*

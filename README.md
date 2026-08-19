@@ -19,9 +19,10 @@
 | File                           | Nội dung                                                           |
 | ------------------------------ | ------------------------------------------------------------------ |
 | `three-option-design-sheet.md` | Design Sheet A/B/C + Human–AI Decision Table                       |
-| `option-a-design.md`           | Spec Option A — phần tôi chịu trách nhiệm chính                    |
+| `option-c-design.md`           | **Spec Option C — phần tôi chịu trách nhiệm chính**                |
+| `option-a-design.md`           | Spec Option A — viết ở giai đoạn khám phá ba option                |
 | `prototype-link.md`            | Link và cách mở prototype A/B/C                                    |
-| `prototype/`                   | Prototype chạy được — `index.html`, `fixture.js`, `annotations.md` |
+| `prototype/`                   | Prototype chạy được — `index.html`, `option-c.js`, `option-c-flashcard.html`, `fixture.js`, `annotations.md` |
 | `prototype-feedback-note.md`   | Feedback Note phiên do chính tôi facilitate                        |
 | `group-feedback-synthesis.md`  | Tổng hợp ba feedback của nhóm                                      |
 | `ai-support-log.md`            | AI Support Log cá nhân                                             |
@@ -62,7 +63,7 @@ Ba option cùng giải một problem, cho cùng user và situation, khác nhau �
 | ----- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
 | **A** | **Ask at recall**            | User hỏi bằng ngôn ngữ tự nhiên lúc ôn; AI quét toàn bộ note, tổng hợp câu trả lời **kèm trích dẫn note gốc**. Không tìm ra thì escalation sang slide V-Learn, không bịa. | **Act** + Don't Act khi không đủ tự tin |
 | **B** | **File at capture**          | AI đề xuất chủ đề ngay khi user vừa ghi note; user xác nhận 1 chạm; về sau ôn theo topic hub.                                                                             | **Ask** — agency thấp nhất              |
-| **C** | **Resurface without search** | Hệ thống tự chọn thời điểm và nội dung, đẩy note cũ quay lại dưới dạng thẻ ôn nhanh. User không đi tìm gì.                                                                | **Act** — user phủ quyết sau            |
+| **C** | **Resurface without search**<br>_(option nhóm đã chốt)_ | Hệ thống tự chọn thời điểm và nội dung, đẩy note cũ quay lại dưới dạng **thẻ ôn nhanh → bộ flashcard ngắn**. User không đi tìm gì. | **Act** — user phủ quyết sau |
 
 ```
 USER CREATES / INITIATES ──────── USER + AI CO-CREATE ──────── AI CREATES / INITIATES, USER REVIEWS
@@ -70,6 +71,8 @@ USER CREATES / INITIATES ──────── USER + AI CO-CREATE ───�
 ```
 
 **Nguyên tắc Human–AI của nhóm:** AI được phép chủ động **tỉ lệ nghịch với độ khó phát hiện lỗi**. B phải là **Ask** vì lỗi của nó là _silent failure_ — note gắn sai nhãn thì biến mất khỏi hub và user không biết mình đang thiếu gì.
+
+> **Nhóm đã chốt đi tiếp với Option C.** Ba option vẫn được giữ đủ trong bài — Day 18 yêu cầu **thử ba cách giải**, không phải chọn sẵn một cách. Việc chốt C là quyết định về **hướng đi tiếp**, và nó vẫn phải chịu kiểm chứng ở buổi test: nếu tester phản ứng như F6 thì C là option sai.
 
 **Prototype:** `prototype/index.html` — xem `prototype-link.md`. Cả ba xuất phát từ một màn hình context chung và dùng một fixture duy nhất: 12 note · 4 tuần · 7 Notepad + 5 app điện thoại · 3 note thuộc chủ đề _Chuẩn hoá CSDL_ · 2 note gây nhiễu gần.
 
@@ -79,29 +82,39 @@ Chi tiết đầy đủ: `three-option-design-sheet.md`.
 
 ## 4. Đóng góp của tôi trong nhóm
 
-**Option chịu trách nhiệm chính: Option A — Ask at recall** — spec đầy đủ: `option-a-design.md`
+**Option chịu trách nhiệm chính: Option C — Resurface without search** — spec đầy đủ: `option-c-design.md`
 
-- Thiết kế cơ chế truy xuất theo câu hỏi, quy tắc **mọi ý phải gắn chip nguồn**.
-- Thiết kế nhánh **Don't Act**: khi không tìm được, AI không bịa mà đưa escalation sang slide V-Learn gốc hoặc gợi ý hỏi bạn cùng lớp.
-- Cài chủ ý lỗi kiểm chứng được: note 06/08 chứa _"CHƯA CHÉP"_ trong khi câu trả lời tổng hợp nghe như đã đủ — để đo **citation có bảo vệ user thật hay chỉ là trang trí**.
-- Viết 4 quy tắc canned output (mọi ý phải gắn nguồn · không nói quá note gốc · không chắc thì hạ cấp · không tìm ra thì Don't Act).
-- Làm **định tuyến câu hỏi tự do**: tester gõ bằng lời của mình, có dấu hay không dấu đều nhận; câu ngoài chủ đề chính được tìm thật trong 12 note và ghép lại nguyên văn kèm nguồn.
+Hình thức đã chốt: **thẻ ôn nhanh tự đến → mở thành bộ flashcard ngắn (4 thẻ · ~2 phút)**.
+
+- Thiết kế cơ chế **bỏ hẳn bước khởi xướng**: AI tự quyết định *cái gì* đáng đưa lại và *khi nào*; user không đi tìm gì.
+- Chốt **ràng buộc bắt buộc của C**: _không có lối vào nào để user tự mở bộ thẻ_. Không có màn hình "Bộ thẻ của tôi", không có nút "Ôn tập". Thiếu ràng buộc này, C biến thành app flashcard do user khởi xướng và **distance check với A/B sụp đổ**.
+- Viết 4 quy tắc canned output cho C (mọi thẻ truy được về một note gốc · không hỏi thứ user chưa ghi · luôn nói lý do đẩy · không suy ra "đã thuộc" từ hành vi bấm).
+- Thiết kế **Don't Act nằm bên trong một cơ chế Act**: thẻ số 4 sinh từ note 06/08 mà chính user ghi _"CHƯA CHÉP"_ → mặt sau **không có đáp án**, nói thẳng user chưa ghi và mở đường sang slide 12 / hỏi bạn. AI được quyền tự đẩy nội dung, **không** được quyền tự viết nội dung.
+- Cài **thẻ lạc đề có chủ ý** (thẻ 3 sinh từ note nhiễu _Phụ thuộc hàm_, có ghi rõ lý do) để đo **silent scope creep** — dạng lỗi cùng họ với silent failure của B.
+- Đặt ba đường thoát **ngay tại C1, trước nội dung**: Ôn ngay · Để sau · Đừng nhắc chủ đề này. Điều kiện để C được dùng agency "Act" là tắt phải rẻ hơn chi phí bị làm phiền.
+- Nêu thẳng **counter-evidence của chính C** trong spec: F4 đến từ một câu hỏi dẫn dắt (_"đúng không?"_), và F6 (_"không cần xem lại nhiều"_) là bằng chứng chống lại C. C là option duy nhất có bằng chứng phản đối ngay trong buổi phỏng vấn.
 
 **Shared context / content**
 
 - Dựng **fixture dùng chung** `prototype/fixture.js` cho cả A/B/C: 12 note, 4 tuần, 7 Notepad + 5 app điện thoại, 3 note đúng chủ đề, 2 note gây nhiễu gần. Cố định bằng số để tester so **cơ chế**, không so chất lượng nội dung.
 - Dựng màn hình context chung và bộ component dùng chung (`.note`, `.chip`, `.ai-block`, `.uncert`), nút reset ↺ ở mọi trạng thái.
+- Tách Option C ra `prototype/option-c.js` làm **một nguồn duy nhất**, `index.html` và `option-c-flashcard.html` cùng nạp — để ba tester không bao giờ nhìn thấy hai phiên bản C khác nhau.
 
 **Human–AI decisions**
 
 - Đề xuất tiêu chí chốt agency: **độ khó phát hiện lỗi**, từ đó kết luận B (không phải C) là option nguy hiểm nhất và phải dùng **Ask**.
+- Từ chính tiêu chí đó, biện hộ cho việc C được dùng **Act**: lỗi của C hiện ngay trên mặt thẻ và hoàn tác chỉ mất một nút — đổi lại C phải là option **dễ tắt nhất**.
 - Đề xuất **ràng buộc bắt buộc cho Option B**: phải giữ đường tìm note không phụ thuộc nhãn, nếu không B tự tạo lại đúng pain F8.
 - Rà Parking Lot theo 4 điều kiện của đề, phát hiện pool thiếu **human escalation** → bổ sung hướng 7.
 
 **Prototype**
 
-- Code toàn bộ `prototype/index.html` (ba option + màn hình chung, một file tự chạy).
-- Viết `prototype/annotations.md`: khung _expect / watch for / do not explain_ cho từng option + bảng thứ tự chống order effect.
+- Code toàn bộ `prototype/index.html` (ba option + màn hình chung), `prototype/option-c.js` (Option C), `prototype/option-c-flashcard.html` (bản C chạy riêng khi trình bày).
+- Viết `prototype/annotations.md`: khung _expect / watch for / do not explain_ cho từng option, bảng bốn thẻ của C kèm phép đo, và bảng thứ tự chống order effect.
+
+**Option A**
+
+- Trước khi nhóm chốt C, tôi làm spec đầy đủ cho Option A (`option-a-design.md`) và code nhánh A trong prototype. Giữ lại trong repo vì Day 18 yêu cầu **ba option đầy đủ**, không phải một option.
 
 **Facilitation & observation**
 
@@ -132,6 +145,8 @@ Ba mốc bắt buộc phải ghi được trong buổi test, vì cả bộ proto
 | **A** — tester có bấm chip nguồn và phát hiện note _"CHƯA CHÉP"_ không? | Citation có thật sự bảo vệ user, hay chỉ là trang trí? |
 | **B** — chọn nhãn nào, và có nhận ra topic hub thiếu note không?        | Silent failure có bị phát hiện không?                  |
 | **C** — câu nói **đầu tiên** khi thẻ tự nhảy ra (nguyên văn)            | AI chủ động là tiện hay làm phiền?                     |
+| **C** — đến thẻ 3 (lạc đề) tester có nhận ra và gỡ không?               | AI âm thầm mở rộng chủ đề — user có thấy không?        |
+| **C** — phản ứng với thẻ 4 **không có đáp án**                          | Một chỗ trống được thừa nhận là hữu ích hay bực mình?  |
 
 Câu được phép kết luận cuối bài:
 
@@ -172,14 +187,16 @@ Bản đầy đủ: `ai-support-log.md`. Tóm tắt:
 | **1. Evidence Continuity** | ✅ Hypothesis Problem đủ 5 thành phần, nối vào F7–F9 Day 17, nêu rõ điều chưa biết<br>⚠️ repo cá nhân mới có 1/3 Practice Note — cần bổ sung ở bản nhóm |
 | **2. Meaningful Options**  | ✅ Cùng user/situation/task/outcome/fixture; khác ở mechanism và role split; distance check viết được mà không nhắc màu/layout/wording                  |
 | **3. Human Control**       | ✅ Mỗi option có expectation, agency, evidence/uncertainty và đường recovery<br>⚠️ Option B kèm ràng buộc bắt buộc: phải giữ đường tìm độc lập với nhãn |
-| **4. Test-ready**          | ✅ 6/7 tiêu chí — mở 1 file, cùng context và task, không cần narrate, có reset path<br>⬜ chưa có người ngoài nhóm thử (việc phút 65–75 tại lớp)        |
+| **4. Test-ready**          | ✅ 6/7 tiêu chí — mở 1 file, cùng context và task, không cần narrate, có reset path<br>✅ Option C dùng chung `option-c.js` nên bản test và bản trình bày không thể lệch nhau<br>⬜ chưa có người ngoài nhóm thử (việc phút 65–75 tại lớp)        |
 | **5. Learning**            | ⬜ **Chưa qua** — cần ba Feedback Note từ ba tester ngoài nhóm                                                                                          |
 
 ## Còn thiếu trước khi nộp
 
 - [ ] Practice Note 2 và 3 từ đồng đội (Chặng 1)
 - [ ] Nhóm xác nhận Solution Parking Lot và nguyên lý Day 16 (hai chỗ ⚠️)
-- [x] Phân công option: Đức — A · Hùng — B · Quang — C ✅
+- [x] Nhóm chốt đi tiếp với **Option C** ✅
+- [x] Phân công: **Đức — Option C** (spec `option-c-design.md` + prototype) ✅
+- [ ] ⚠️ Phân công lại Option A và B trong nhóm — chờ Hùng và Quang xác nhận
 - [ ] Người ngoài nhóm thử prototype trước khi test chính thức
 - [ ] Test với 3 tester ngoài nhóm → 3 Feedback Note
 - [ ] Group Feedback Synthesis + một Next Change + Still Unproven

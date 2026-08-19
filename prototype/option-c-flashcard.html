@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Option C — Thẻ ôn nhanh &amp; Flashcard</title>
+<!-- Bản C chạy riêng, dùng khi trình bày Option C một mình.
+     Logic lấy từ option-c.js — cùng nguồn với index.html, không sao chép. -->
+<style>
+:root{
+  --bg:#f6f8fa;
+  --card:#ffffff;
+  --ink:#0f172a;
+  --ink-secondary:#334155;
+  --muted:#64748b;
+  --line:#e2e8f0;
+  --line-focus:#94a3b8;
+
+  --accent:#2563eb;
+  --accent-hover:#1d4ed8;
+  --accent-soft:#eff6ff;
+  --accent-border:#bfdbfe;
+
+  --ai:#6d28d9;
+  --ai-soft:#f5f3ff;
+  --ai-border:#ddd6fe;
+
+  --warn:#b45309;
+  --warn-soft:#fffbeb;
+  --warn-border:#fde68a;
+
+  --ok:#047857;
+  --ok-soft:#ecfdf5;
+  --ok-border:#a7f3d0;
+
+  --r:12px;
+  --r-sm:8px;
+  --shadow-sm:0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --shadow:0 2px 8px -1px rgba(15, 23, 42, 0.06), 0 1px 3px -1px rgba(15, 23, 42, 0.04);
+  --shadow-md:0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 64px}
+
+header{
+  position:sticky;top:0;
+  background:rgba(246, 248, 250, 0.94);
+  border-bottom:1px solid var(--line);
+  z-index:90;
+}
+.bar{max-width:720px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:10px}
+.logo{font-weight:700;font-size:16px;letter-spacing:-.3px;color:var(--ink)}
+.badge{
+  font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;
+  background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-border);
+}
+.spacer{flex:1}
+.reset{
+  font:inherit;font-size:13px;font-weight:600;
+  border:1px solid var(--line);background:var(--card);color:var(--muted);
+  padding:7px 14px;border-radius:99px;cursor:pointer;
+  box-shadow:var(--shadow-sm);transition:all .15s ease;
+  min-height:36px;display:inline-flex;align-items:center;
+}
+.reset:hover{color:var(--ink);border-color:var(--line-focus);box-shadow:var(--shadow)}
+
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:18px 20px;box-shadow:var(--shadow);margin:14px 0;
+}
+h1{font-size:22px;font-weight:700;margin:24px 0 6px;letter-spacing:-.4px;color:var(--ink)}
+h2{font-size:16px;font-weight:700;margin:0 0 8px;letter-spacing:-.2px;color:var(--ink)}
+.sub{color:var(--muted);font-size:14px;margin:0 0 18px;line-height:1.5}
+.label{
+  font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:6px;
+}
+.note{
+  border:1px solid var(--line);border-radius:var(--r-sm);padding:12px 14px;margin:8px 0;
+  background:var(--card);box-shadow:var(--shadow-sm);
+}
+.note .meta{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;margin-bottom:5px;font-weight:500}
+.note .body{font-size:14px;color:var(--ink-secondary);line-height:1.55}
+.src{
+  font-size:11px;font-weight:600;border:1px solid var(--line);border-radius:4px;
+  padding:2px 6px;background:#f8fafc;color:var(--muted);
+}
+.chip{
+  display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;
+  border:1px solid var(--accent);color:var(--accent);background:var(--accent-soft);
+  border-radius:99px;padding:4px 12px;cursor:pointer;margin:4px 6px 0 0;
+  min-height:32px;transition:background .15s ease, border-color .15s ease;
+}
+.chip:hover{background:#dbeafe;border-color:var(--accent-hover)}
+.btn{
+  font:inherit;font-size:14px;font-weight:600;border:0;border-radius:var(--r-sm);
+  padding:10px 18px;min-height:44px;cursor:pointer;background:var(--accent);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  box-shadow:var(--shadow-sm);transition:background .15s ease, transform .1s ease;
+}
+.btn:hover{background:var(--accent-hover)}
+.btn:active{transform:scale(0.98)}
+.btn.ghost{background:transparent;color:var(--ink-secondary);border:1px solid var(--line);font-weight:600;box-shadow:none}
+.btn.ghost:hover{background:#f1f5f9;color:var(--ink);border-color:var(--line-focus)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.ai-block{
+  background:var(--ai-soft);border:1px solid var(--ai-border);border-radius:var(--r);
+  padding:16px;margin:12px 0;
+}
+.ai-tag{
+  font-size:11px;font-weight:700;color:var(--ai);letter-spacing:.5px;margin-bottom:8px;
+  text-transform:uppercase;
+}
+.uncert{
+  font-size:13px;color:var(--warn);background:var(--warn-soft);
+  border:1px solid var(--warn-border);border-radius:var(--r-sm);padding:10px 12px;margin-top:12px;
+  line-height:1.5;
+}
+.reason{font-size:13px;color:var(--muted);font-style:italic;margin-top:6px;line-height:1.5}
+.ok{
+  font-size:13.5px;color:var(--ok);background:var(--ok-soft);border:1px solid var(--ok-border);
+  border-radius:var(--r-sm);padding:10px 12px;margin:12px 0;line-height:1.5;
+}
+.hidden{display:none}
+.divider{border:0;border-top:1px solid var(--line);margin:18px 0}
+.small{font-size:13px;color:var(--muted);line-height:1.5}
+.toast{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:#0f172a;color:#fff;
+  font-size:13.5px;font-weight:500;padding:10px 18px;border-radius:99px;
+  box-shadow:var(--shadow-md);z-index:100;
+}
+
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+@media (prefers-reduced-motion: reduce){
+  *,::before,::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
+}
+
+@media (max-width: 480px){
+  .wrap{padding:0 12px 48px}
+  .card{padding:14px 14px}
+  h1{font-size:20px}
+}
+</style>
+</head>
+<body>
+
+<header><div class="bar">
+  <span class="logo">AI Notes</span>
+  <span class="badge">Phiên bản C · Resurface without search</span>
+  <span class="spacer"></span>
+  <button class="reset" onclick="backToContext()">↺ Về màn hình bắt đầu</button>
+</div></header>
+
+<div class="wrap">
+
+<!-- COMMON CONTEXT — y hệt màn hình chung của bản A/B/C -->
+<section id="s-context">
+  <h1>Trước khi bắt đầu</h1>
+  <p class="sub">Đọc phần này rồi bấm nút ở cuối trang.</p>
+  <div class="card">
+    <div class="label">Bạn là ai</div>
+    <p id="x-who"></p><p id="x-habit"></p><p id="x-when"></p>
+    <hr class="divider">
+    <div class="label">Việc bạn cần làm</div>
+    <p id="x-task" style="font-weight:600"></p>
+    <p class="small" id="x-outcome"></p>
+  </div>
+  <div class="card">
+    <div class="label">12 note của bạn</div>
+    <p class="small">Đây là toàn bộ note bạn đã ghi — cùng bộ note với phiên bản A và B.</p>
+    <div id="x-notes"></div>
+  </div>
+  <div class="row"><button class="btn" onclick="openC()">Mở phiên bản C · Resurface without search</button></div>
+</section>
+
+<section id="s-c" class="hidden"><div id="c-root"></div></section>
+
+</div>
+
+<script src="fixture.js"></script>
+<script src="option-c.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+$('x-who').textContent   = CONTEXT.who;
+$('x-habit').textContent = CONTEXT.habit;
+$('x-when').textContent  = CONTEXT.when;
+$('x-task').textContent  = CONTEXT.task;
+$('x-outcome').textContent = CONTEXT.outcome;
+$('x-notes').innerHTML = NOTES.map(n =>
+  `<div class="note"><div class="meta"><span>${n.date}</span>
+   <span class="src">${n.src}</span>${n.topic?`<span>· ${n.topic}</span>`:''}</div>
+   <div class="body">${n.text}</div></div>`).join('');
+
+const C = mountC('c-root');
+function openC(){
+  $('s-context').classList.add('hidden');
+  $('s-c').classList.remove('hidden');
+  C.start();
+}
+function backToContext(){
+  C.stop();
+  $('s-c').classList.add('hidden');
+  $('s-context').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>

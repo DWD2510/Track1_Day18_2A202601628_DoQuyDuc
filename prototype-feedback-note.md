@@ -3,7 +3,7 @@
 > Điền **trong lúc test**, không viết lại từ trí nhớ sau buổi.
 > Cột "Observation" chỉ chép việc tester **làm** và **nói nguyên văn**. Mọi diễn giải xuống mục OBSERVED/INTERPRETED phía dưới.
 
-**Facilitator:** Đỗ Quý Đức (2A202601628) — phụ trách Option A  **Ngày:** ....................
+**Facilitator:** Đỗ Quý Đức (2A202601628) — phụ trách Option C  **Ngày:** ....................
 **Tester / context:** ..................................................
 **Có relevant context không?** ☐ Có — lần gần nhất: .................... ☐ Không → *feedback này chỉ dùng cho interaction breakdown, không dùng để so giá trị giữa các option*
 **Thứ tự option đã chạy:** **A** → **B** → **C**  *(theo bảng chống order effect)*
@@ -26,6 +26,8 @@
 | **A** — có bấm chip nguồn không? Có mở note 06/08 và thấy chữ *"CHƯA CHÉP"* không? Phản ứng? | |
 | **B** — chọn nhãn nào? (☐ Phụ thuộc hàm ☐ Chuẩn hoá CSDL ☐ tự đặt sau) **Có nhận ra topic hub thiếu note không?** | |
 | **C** — **câu nói đầu tiên (nguyên văn)** khi thẻ tự nhảy ra | |
+| **C** — thẻ 3 *(Phụ thuộc hàm — lạc đề)*: có nhận ra không? có bấm *gỡ khỏi bộ* không? | |
+| **C** — thẻ 4 *(không có đáp án)*: phản ứng? có bấm *Mở slide 12* / *Hỏi bạn* không? | |
 
 ### Câu hỏi so sánh (phút 14–18)
 

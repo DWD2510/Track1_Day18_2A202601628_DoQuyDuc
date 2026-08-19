@@ -6,77 +6,180 @@
 <title>AI Notes — Micro-prototype A/B/C</title>
 <style>
 :root{
-  --bg:#f4f5f7; --card:#fff; --ink:#16181d; --muted:#6b7280; --line:#e3e6ea;
-  --accent:#2f6feb; --accent-soft:#eaf1fe; --warn:#b45309; --warn-soft:#fef6e7;
-  --ai:#6d3bd1; --ai-soft:#f2ecfd; --ok:#0f7b46; --ok-soft:#e7f5ee;
-  --r:10px; --shadow:0 1px 2px rgba(16,24,40,.06),0 4px 12px rgba(16,24,40,.05);
+  --bg:#f6f8fa;
+  --card:#ffffff;
+  --ink:#0f172a;
+  --ink-secondary:#334155;
+  --muted:#64748b;
+  --line:#e2e8f0;
+  --line-focus:#94a3b8;
+
+  --accent:#2563eb;
+  --accent-hover:#1d4ed8;
+  --accent-soft:#eff6ff;
+  --accent-border:#bfdbfe;
+
+  --ai:#6d28d9;
+  --ai-soft:#f5f3ff;
+  --ai-border:#ddd6fe;
+
+  --warn:#b45309;
+  --warn-soft:#fffbeb;
+  --warn-border:#fde68a;
+
+  --ok:#047857;
+  --ok-soft:#ecfdf5;
+  --ok-border:#a7f3d0;
+
+  --r:12px;
+  --r-sm:8px;
+  --shadow-sm:0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --shadow:0 2px 8px -1px rgba(15, 23, 42, 0.06), 0 1px 3px -1px rgba(15, 23, 42, 0.04);
+  --shadow-md:0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);
-  font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
 .wrap{max-width:720px;margin:0 auto;padding:0 16px 64px}
 
 /* ---------- SHARED CHROME ---------- */
-header{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);z-index:9}
-.bar{max-width:720px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px}
-.logo{font-weight:700;letter-spacing:-.2px}
-.badge{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;
-  background:var(--accent-soft);color:var(--accent)}
+header{
+  position:sticky;top:0;
+  background:rgba(246, 248, 250, 0.94);
+  border-bottom:1px solid var(--line);
+  z-index:90;
+}
+.bar{max-width:720px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:10px}
+.logo{font-weight:700;font-size:16px;letter-spacing:-.3px;color:var(--ink)}
+.badge{
+  font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;
+  background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-border);
+}
 .spacer{flex:1}
-.reset{font-size:13px;border:1px solid var(--line);background:var(--card);color:var(--muted);
-  padding:6px 12px;border-radius:99px;cursor:pointer}
-.reset:hover{color:var(--ink);border-color:var(--muted)}
+.reset{
+  font:inherit;font-size:13px;font-weight:600;
+  border:1px solid var(--line);background:var(--card);color:var(--muted);
+  padding:7px 14px;border-radius:99px;cursor:pointer;
+  box-shadow:var(--shadow-sm);transition:all .15s ease;
+  min-height:36px;display:inline-flex;align-items:center;
+}
+.reset:hover{color:var(--ink);border-color:var(--line-focus);box-shadow:var(--shadow)}
 
 /* ---------- SHARED COMPONENTS ---------- */
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
-  padding:16px;box-shadow:var(--shadow);margin:14px 0}
-h1{font-size:21px;margin:24px 0 6px;letter-spacing:-.3px}
-h2{font-size:16px;margin:0 0 10px}
-.sub{color:var(--muted);font-size:14px;margin:0 0 18px}
-.label{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-.note{border:1px solid var(--line);border-radius:8px;padding:11px 13px;margin:8px 0;background:var(--card)}
-.note .meta{font-size:12px;color:var(--muted);display:flex;gap:8px;margin-bottom:5px}
-.note .body{font-size:14px}
-.src{font-size:11px;border:1px solid var(--line);border-radius:4px;padding:1px 5px}
-.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;border:1px solid var(--accent);
-  color:var(--accent);background:var(--accent-soft);border-radius:99px;padding:2px 9px;
-  cursor:pointer;margin:4px 4px 0 0}
-.chip:hover{background:#dbe7fd}
-.btn{font:inherit;font-size:14px;font-weight:600;border:0;border-radius:8px;padding:9px 16px;
-  cursor:pointer;background:var(--accent);color:#fff}
-.btn:hover{filter:brightness(1.07)}
-.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line);font-weight:500}
-.btn.ghost:hover{color:var(--ink);border-color:var(--muted)}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.ai-block{background:var(--ai-soft);border:1px solid #ddd0f7;border-radius:var(--r);padding:14px}
-.ai-tag{font-size:11px;font-weight:700;color:var(--ai);letter-spacing:.4px;margin-bottom:8px}
-.scope{font-size:12.5px;color:var(--muted);background:#fff;border:1px dashed var(--line);
-  border-radius:8px;padding:9px 11px;margin-bottom:12px}
-.uncert{font-size:13px;color:var(--warn);background:var(--warn-soft);
-  border:1px solid #f3ddb4;border-radius:8px;padding:9px 11px;margin-top:12px}
-.reason{font-size:12.5px;color:var(--muted);font-style:italic;margin-top:6px}
-.ok{font-size:13px;color:var(--ok);background:var(--ok-soft);border:1px solid #c3e6d3;
-  border-radius:8px;padding:9px 11px;margin:12px 0}
-input[type=text]{width:100%;font:inherit;padding:11px 13px;border:1px solid var(--line);
-  border-radius:8px;background:var(--card)}
-input[type=text]:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
-.opt-pick{display:block;width:100%;text-align:left;font:inherit;background:var(--card);
-  border:1.5px solid var(--line);border-radius:8px;padding:11px 13px;margin:7px 0;cursor:pointer}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:18px 20px;box-shadow:var(--shadow);margin:14px 0;
+}
+h1{font-size:22px;font-weight:700;margin:24px 0 6px;letter-spacing:-.4px;color:var(--ink)}
+h2{font-size:16px;font-weight:700;margin:0 0 8px;letter-spacing:-.2px;color:var(--ink)}
+.sub{color:var(--muted);font-size:14px;margin:0 0 18px;line-height:1.5}
+.label{
+  font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:6px;
+}
+.note{
+  border:1px solid var(--line);border-radius:var(--r-sm);padding:12px 14px;margin:8px 0;
+  background:var(--card);box-shadow:var(--shadow-sm);
+}
+.note .meta{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;margin-bottom:5px;font-weight:500}
+.note .body{font-size:14px;color:var(--ink-secondary);line-height:1.55}
+.src{
+  font-size:11px;font-weight:600;border:1px solid var(--line);border-radius:4px;
+  padding:2px 6px;background:#f8fafc;color:var(--muted);
+}
+.chip{
+  display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;
+  border:1px solid var(--accent);color:var(--accent);background:var(--accent-soft);
+  border-radius:99px;padding:4px 12px;cursor:pointer;margin:4px 6px 0 0;
+  min-height:32px;transition:background .15s ease, border-color .15s ease;
+}
+.chip:hover{background:#dbeafe;border-color:var(--accent-hover)}
+.btn{
+  font:inherit;font-size:14px;font-weight:600;border:0;border-radius:var(--r-sm);
+  padding:10px 18px;min-height:44px;cursor:pointer;background:var(--accent);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  box-shadow:var(--shadow-sm);transition:background .15s ease, transform .1s ease;
+}
+.btn:hover{background:var(--accent-hover)}
+.btn:active{transform:scale(0.98)}
+.btn.ghost{background:transparent;color:var(--ink-secondary);border:1px solid var(--line);font-weight:600;box-shadow:none}
+.btn.ghost:hover{background:#f1f5f9;color:var(--ink);border-color:var(--line-focus)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.ai-block{
+  background:var(--ai-soft);border:1px solid var(--ai-border);border-radius:var(--r);
+  padding:16px;margin:12px 0;
+}
+.ai-tag{
+  font-size:11px;font-weight:700;color:var(--ai);letter-spacing:.5px;margin-bottom:8px;
+  text-transform:uppercase;
+}
+.scope{
+  font-size:13px;color:var(--muted);background:#ffffff;border:1px dashed var(--line);
+  border-radius:var(--r-sm);padding:10px 12px;margin-bottom:12px;line-height:1.5;
+}
+.uncert{
+  font-size:13px;color:var(--warn);background:var(--warn-soft);
+  border:1px solid var(--warn-border);border-radius:var(--r-sm);padding:10px 12px;margin-top:12px;
+  line-height:1.5;
+}
+.reason{font-size:13px;color:var(--muted);font-style:italic;margin-top:6px;line-height:1.5}
+.ok{
+  font-size:13.5px;color:var(--ok);background:var(--ok-soft);border:1px solid var(--ok-border);
+  border-radius:var(--r-sm);padding:10px 12px;margin:12px 0;line-height:1.5;
+}
+input[type=text]{
+  width:100%;font:inherit;font-size:14.5px;padding:11px 14px;min-height:44px;
+  border:1.5px solid var(--line);border-radius:var(--r-sm);background:var(--card);color:var(--ink);
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+input[type=text]:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.opt-pick{
+  display:block;width:100%;text-align:left;font:inherit;background:var(--card);
+  border:1.5px solid var(--line);border-radius:var(--r-sm);padding:12px 14px;margin:8px 0;
+  min-height:52px;cursor:pointer;box-shadow:var(--shadow-sm);transition:all .15s ease;
+}
 .opt-pick:hover{border-color:var(--accent);background:var(--accent-soft)}
-.opt-pick b{display:block;font-size:14px}
-.opt-pick span{font-size:12.5px;color:var(--muted)}
+.opt-pick b{display:block;font-size:14.5px;color:var(--ink);margin-bottom:2px}
+.opt-pick span{font-size:13px;color:var(--muted);line-height:1.45}
 .hidden{display:none}
-.pending{font-size:11px;font-weight:700;color:var(--warn);background:var(--warn-soft);
-  border:1px solid #f3ddb4;border-radius:4px;padding:1px 6px;letter-spacing:.3px}
+.pending{
+  font-size:11px;font-weight:700;color:var(--warn);background:var(--warn-soft);
+  border:1px solid var(--warn-border);border-radius:4px;padding:2px 6px;letter-spacing:.3px;
+}
 .divider{border:0;border-top:1px solid var(--line);margin:18px 0}
-.small{font-size:12.5px;color:var(--muted)}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:#16181d;color:#fff;
-  font-size:13px;padding:10px 16px;border-radius:99px;box-shadow:var(--shadow);z-index:20}
-.entry{display:block;width:100%;text-align:left;font:inherit;background:var(--card);
-  border:1px solid var(--line);border-radius:var(--r);padding:15px;margin:10px 0;cursor:pointer;
-  box-shadow:var(--shadow)}
-.entry:hover{border-color:var(--accent)}
-.entry b{font-size:15px}.entry p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+.small{font-size:13px;color:var(--muted);line-height:1.5}
+.toast{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:#0f172a;color:#fff;
+  font-size:13.5px;font-weight:500;padding:10px 18px;border-radius:99px;
+  box-shadow:var(--shadow-md);z-index:100;
+}
+.entry{
+  display:block;width:100%;text-align:left;font:inherit;background:var(--card);
+  border:1.5px solid var(--line);border-radius:var(--r);padding:16px 18px;margin:10px 0;
+  min-height:64px;cursor:pointer;box-shadow:var(--shadow-sm);transition:all .15s ease;
+}
+.entry:hover{border-color:var(--accent);background:var(--accent-soft)}
+.entry b{font-size:15.5px;color:var(--ink)}
+.entry p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+@media (prefers-reduced-motion: reduce){
+  *,::before,::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important}
+}
+
+@media (max-width: 480px){
+  .wrap{padding:0 12px 48px}
+  .card{padding:14px 14px}
+  h1{font-size:20px}
+}
 </style>
 </head>
 <body>
@@ -110,9 +213,18 @@ input[type=text]:focus{outline:2px solid var(--accent-soft);border-color:var(--a
     <div id="c-notes"></div>
   </div>
   <div class="label" style="margin-top:22px">Chọn phiên bản</div>
-  <button class="entry" onclick="go('a')"><b>Phiên bản A</b><p>Mở phiên bản A</p></button>
-  <button class="entry" onclick="go('b')"><b>Phiên bản B</b><p>Mở phiên bản B</p></button>
-  <button class="entry" onclick="go('c')"><b>Phiên bản C</b><p>Mở phiên bản C</p></button>
+  <button class="entry" onclick="go('a')">
+    <b>Phiên bản A · Ask at recall</b>
+    <p>User hỏi bằng lời lúc ôn → AI tổng hợp câu trả lời kèm trích dẫn note gốc</p>
+  </button>
+  <button class="entry" onclick="go('b')">
+    <b>Phiên bản B · File at capture</b>
+    <p>AI đề xuất nhãn ngay lúc vừa ghi → user xác nhận 1 chạm → Topic Hub</p>
+  </button>
+  <button class="entry" onclick="go('c')">
+    <b>Phiên bản C · Resurface without search</b>
+    <p>AI tự động chọn thời điểm và nội dung, đẩy lại thẻ ôn nhanh (bộ 4 flashcard)</p>
+  </button>
 </section>
 
 <!-- ================= OPTION A ================= -->
@@ -228,50 +340,13 @@ input[type=text]:focus{outline:2px solid var(--accent-soft);border-color:var(--a
 </section>
 
 <!-- ================= OPTION C ================= -->
-<section id="s-c" class="hidden">
-  <!-- C1 -->
-  <div id="c1">
-    <h1>Màn hình chính</h1>
-    <p class="sub">Bạn không cần tìm gì cả. Cứ ở đây một lát.</p>
-    <div class="card">
-      <div class="label">Môn đang học</div>
-      <p><b>Nhập môn Cơ sở dữ liệu</b><br><span class="small">Buổi tiếp theo: 20/08 · Kiểm tra: tuần sau</span></p>
-    </div>
-    <div id="c-card-slot"></div>
-  </div>
-  <!-- C2 -->
-  <div id="c2" class="hidden">
-    <h1>3 điều bạn đã ghi về Chuẩn hoá CSDL</h1>
-    <p class="sub" id="c-why2"></p>
-    <div class="card"><div class="ai-block">
-      <div class="ai-tag">AI TÓM TẮT LẠI TỪ NOTE CỦA BẠN</div>
-      <div id="c-summary"></div>
-    </div>
-    <div class="label" style="margin-top:16px">Note gốc</div>
-    <div id="c-origin"></div>
-    <div class="row">
-      <button class="btn" onclick="cDone('known')">Mình thuộc rồi</button>
-      <button class="btn ghost" onclick="cDone('later')">Nhắc lại sau</button>
-      <button class="btn ghost" onclick="cDone('off')">Đừng nhắc chủ đề này nữa</button>
-    </div></div>
-  </div>
-  <!-- C3 -->
-  <div id="c3" class="hidden">
-    <h1 id="c3-title">Đã ghi nhận</h1>
-    <div class="card">
-      <div class="ok" id="c-result"></div>
-      <hr class="divider">
-      <div class="label">Thẻ đã bỏ qua</div>
-      <p class="small">Mọi thẻ bạn dẹp đều nằm đây, không mất đi.</p>
-      <div id="c-skipped"></div>
-      <div class="row"><button class="btn ghost" onclick="cBack()">← Về màn hình chính</button></div>
-    </div>
-  </div>
-</section>
+<!-- Markup + logic nằm ở option-c.js — nguồn duy nhất, dùng chung với option-c-flashcard.html -->
+<section id="s-c" class="hidden"><div id="c-root"></div></section>
 
 </div>
 
 <script src="fixture.js"></script>
+<script src="option-c.js"></script>
 <script>
 /* ---------- shared render helpers (dùng chung cả 3 option) ---------- */
 const $ = id => document.getElementById(id);
@@ -286,7 +361,12 @@ function toast(msg){
   document.body.appendChild(t); setTimeout(()=>t.remove(),2200);
 }
 const SCREENS=['s-context','s-a','s-b','s-c'];
-const STATES=['a1','a2','a3','a4','b1','b2','b3','c1','c2','c3'];
+const STATES=['a1','a2','a3','a4','b1','b2','b3'];  // C tự quản lý trạng thái trong option-c.js
+const OPT_NAMES={
+  a:'Phiên bản A · Ask at recall',
+  b:'Phiên bản B · File at capture',
+  c:'Phiên bản C · Resurface without search'
+};
 function show(state){
   STATES.forEach(s=>$(s).classList.add('hidden'));
   $(state).classList.remove('hidden'); window.scrollTo(0,0);
@@ -294,17 +374,17 @@ function show(state){
 function go(opt){
   SCREENS.forEach(s=>$(s).classList.add('hidden'));
   $('s-'+opt).classList.remove('hidden');
-  $('badge').textContent='Phiên bản '+opt.toUpperCase();
+  $('badge').textContent=OPT_NAMES[opt] || ('Phiên bản '+opt.toUpperCase());
   if(opt==='a') show('a1');
   if(opt==='b'){ bReset(); show('b1'); }
-  if(opt==='c'){ cReset(); show('c1'); cArm(); }
+  if(opt==='c'){ C.start(); }
   window.scrollTo(0,0);
 }
 function reset(){
   SCREENS.forEach(s=>$(s).classList.add('hidden'));
   $('s-context').classList.remove('hidden');
   $('badge').textContent='Bắt đầu';
-  if(cTimer) clearTimeout(cTimer);
+  C.stop();
   window.scrollTo(0,0);
 }
 
@@ -456,54 +536,9 @@ function bBrowse(mode){
 }
 
 /* ================= OPTION C ================= */
-let cTimer=null, cSkipped=[];
-function cReset(){ $('c-card-slot').innerHTML=''; $('c-skipped').innerHTML=''; cSkipped=[]; }
-function cArm(){
-  if(cTimer) clearTimeout(cTimer);
-  cTimer = setTimeout(()=>{
-    $('c-card-slot').innerHTML = `
-      <div class="card" style="border-color:#ddd0f7">
-        <div class="ai-tag">AI ĐƯA LẠI CHO BẠN</div>
-        <h2 style="margin:4px 0 6px">3 điều bạn ghi 2 tuần trước về <b>Chuẩn hoá CSDL</b></h2>
-        <p class="reason">3 note bạn ghi 04/08–06/08 · vì tuần sau kiểm tra và bạn chưa mở lại chủ đề này lần nào.</p>
-        <p class="small">Mình chọn theo ngày ghi và lịch môn — mình không biết bạn đã thuộc hay chưa.</p>
-        <div class="row">
-          <button class="btn" onclick="cOpen()">Xem</button>
-          <button class="btn ghost" onclick="cSkip()">Để sau</button>
-        </div>
-      </div>`;
-    window.scrollTo(0,document.body.scrollHeight);
-  }, 2600);
-}
-function cOpen(){
-  $('c-why2').textContent='Vì tuần sau kiểm tra và bạn chưa mở lại chủ đề này lần nào.';
-  $('c-summary').innerHTML=`
-    <p>• <b>1NF</b> — loại bỏ thuộc tính đa trị. Bạn có một câu hỏi bỏ ngỏ về 2NF.</p>
-    <p>• <b>3NF</b> — bỏ phụ thuộc bắc cầu: MaSV → MaLop → TenLop.</p>
-    <p>• <b>BCNF</b> — chặt hơn 3NF; note của bạn ghi “CHƯA CHÉP” ví dụ ở slide 12.</p>`;
-  $('c-origin').innerHTML = NOTES.filter(n=>n.role==='target').map(noteHTML).join('');
-  show('c2');
-}
-function cSkip(){
-  cSkipped.push('3 điều về Chuẩn hoá CSDL · bỏ qua '+TODAY);
-  cDone('skip');
-}
-function cDone(kind){
-  const msg={
-    known:'Đã đánh dấu <b>thuộc rồi</b>. Mình sẽ không đưa lại chủ đề này trong 30 ngày tới.',
-    later:'Được. Mình sẽ nhắc lại <b>trước buổi 20/08</b>.',
-    off:'Đã tắt nhắc cho chủ đề <b>Chuẩn hoá CSDL</b>. Bạn bật lại được trong cài đặt.',
-    skip:'Đã để sau. Thẻ này nằm trong danh sách bên dưới.'
-  }[kind];
-  $('c3-title').textContent = kind==='off' ? 'Đã tắt' : 'Đã ghi nhận';
-  $('c-result').innerHTML = msg;
-  if(kind!=='skip') cSkipped.push('3 điều về Chuẩn hoá CSDL · '+kind+' '+TODAY);
-  $('c-skipped').innerHTML = cSkipped.length
-    ? cSkipped.map(s=>`<div class="note"><div class="body">${s}</div></div>`).join('')
-    : '<p class="small">Chưa có thẻ nào.</p>';
-  show('c3');
-}
-function cBack(){ show('c1'); cArm(); }
+/* Toàn bộ Option C (thẻ ôn nhanh + flashcard) nằm trong option-c.js.
+   Ở đây chỉ mount vào #c-root và giữ hai lệnh start/stop cho nút ↺. */
+const C = mountC('c-root');
 </script>
 </body>
 </html>

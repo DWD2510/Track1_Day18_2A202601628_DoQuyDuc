@@ -1,9 +1,12 @@
 # Three-option Design Sheet — Day 18
 
 **Case B — AI Notes: Personal Learning Notes (V-Learn)** · giữ nguyên case Day 17
-Nhóm: Đỗ Quý Đức *(Option A)* · Nguyễn Thanh Hùng *(Option B)* · Lê Nguyễn Minh Quang *(Option C)*
+Nhóm: Đỗ Quý Đức *(Option C — option nhóm đã chốt đi tiếp)* · Nguyễn Thanh Hùng · Lê Nguyễn Minh Quang
+
+> **Nhóm chốt đi tiếp với Option C**, hình thức: *thẻ ôn nhanh tự đến → bộ flashcard ngắn*. Ba option vẫn được giữ đủ ở đây — Day 18 yêu cầu **thử ba cách giải**, và việc chốt C vẫn phải chịu kiểm chứng ở buổi test.
 
 > Bản đầy đủ kèm quá trình làm từng chặng: `day18-lab.md`
+> Spec chi tiết Option C: `option-c-design.md`
 
 ---
 
@@ -33,12 +36,12 @@ Nhóm: Đỗ Quý Đức *(Option A)* · Nguyễn Thanh Hùng *(Option B)* · L�
 
 | | **A — Ask at recall** | **B — File at capture** | **C — Resurface without search** |
 |---|---|---|---|
-| **Solution mechanism** | User hỏi bằng ngôn ngữ tự nhiên lúc ôn; AI quét toàn bộ note, tổng hợp câu trả lời **kèm trích dẫn note gốc** | AI đề xuất môn/chủ đề ngay khi user vừa ghi; user xác nhận 1 chạm; về sau ôn theo topic hub | Hệ thống tự chọn thời điểm và nội dung, đẩy note cũ quay lại dưới dạng thẻ ôn nhanh |
+| **Solution mechanism** | User hỏi bằng ngôn ngữ tự nhiên lúc ôn; AI quét toàn bộ note, tổng hợp câu trả lời **kèm trích dẫn note gốc** | AI đề xuất môn/chủ đề ngay khi user vừa ghi; user xác nhận 1 chạm; về sau ôn theo topic hub | Hệ thống tự chọn thời điểm và nội dung, đẩy note cũ quay lại dưới dạng **thẻ ôn nhanh → bộ flashcard ngắn (4 thẻ · ~2 phút)** |
 | **Giải pain ở đâu** | Làm việc tìm kiếm rẻ đi | Làm cho không còn gì phải tìm | Xoá bỏ hành vi đi tìm |
-| **User làm gì** | Đặt câu hỏi · đọc câu trả lời · bấm chip nguồn kiểm chứng | Ghi note như thường · đọc nhãn đề xuất · xác nhận hoặc sửa | Không đi tìm · nhận thẻ · mở / hoãn / đánh dấu đã thuộc |
-| **AI làm gì** | Tìm across nguồn, chọn lọc, tổng hợp, **luôn dẫn nguồn**; không tìm ra thì escalation, không bịa | Đọc note, đoán chủ đề, tìm note cũ cùng chủ đề, **đề xuất** — không tự ghi | Quyết định **cái gì** đáng đưa lại và **khi nào**; tóm tắt thành thẻ |
+| **User làm gì** | Đặt câu hỏi · đọc câu trả lời · bấm chip nguồn kiểm chứng | Ghi note như thường · đọc nhãn đề xuất · xác nhận hoặc sửa | Không đi tìm · nhận thẻ · lật từng flashcard · tự chấm *Nhớ rồi / Mơ hồ / Chưa nhớ* · hoãn hoặc tắt |
+| **AI làm gì** | Tìm across nguồn, chọn lọc, tổng hợp, **luôn dẫn nguồn**; không tìm ra thì escalation, không bịa | Đọc note, đoán chủ đề, tìm note cũ cùng chủ đề, **đề xuất** — không tự ghi | Quyết định **cái gì** đáng đưa lại và **khi nào**; đặt câu hỏi trên thẻ từ chữ trong note. **Không** tự viết đáp án cho phần user chưa ghi |
 | **Trigger** | User khởi xướng, **lúc ôn** | Hệ thống khởi xướng, **lúc ghi** | Hệ thống khởi xướng, **lúc AI chọn** |
-| **Trade-off chính** | Không sửa được gốc lộn xộn — mỗi lần hỏi tính lại từ đầu; user phải bỏ công kiểm chứng thì mới an toàn | Đánh thuế lên **mọi** lần ghi (ghi chỉ mất 1–2 phút); xác nhận cho xong → nhãn sai → hub hỏng; lợi ích chỉ đến sau vài tuần | User nhường quyền chọn thời điểm; đẩy sai → làm phiền → tắt thông báo là mất hết. F6 là tín hiệu rủi ro trực tiếp |
+| **Trade-off chính** | Không sửa được gốc lộn xộn — mỗi lần hỏi tính lại từ đầu; user phải bỏ công kiểm chứng thì mới an toàn | Đánh thuế lên **mọi** lần ghi (ghi chỉ mất 1–2 phút); xác nhận cho xong → nhãn sai → hub hỏng; lợi ích chỉ đến sau vài tuần | User nhường quyền chọn thời điểm; đẩy sai → làm phiền → tắt thông báo là mất hết. Tín hiệu *"Nhớ rồi"* do user tự chấm nên lịch đẩy dựa trên dữ liệu không kiểm chứng được. **F6 là bằng chứng chống lại C ngay trong buổi phỏng vấn** |
 
 ### Distance check
 
@@ -60,12 +63,13 @@ USER CREATES / INITIATES ──────── USER + AI CO-CREATE ───�
 |---|---|---|---|
 | **AI Act / Ask / Don't Act?** | **Act** khi được hỏi + **Don't Act** khi không đủ tự tin → escalation sang slide V-Learn / hỏi bạn, không bịa | **Ask** — agency thấp nhất; AI không được tự gắn nhãn | **Act** — tự đẩy, user phủ quyết sau |
 | **Vì sao** | User đã chủ động hỏi; lỗi kiểm chứng được nhờ citation | **Lỗi khó phát hiện nhất** — note gắn sai nhãn thì biến mất khỏi hub, user không biết mình đang thiếu gì | Lỗi hiện ngay trên mặt thẻ, hoàn tác rẻ; đổi lại phải là option **dễ tắt nhất** |
-| **Capability / limit nói bằng gì** | *"Mình tìm trong 12 note của bạn, không tìm trên internet"* + *"chỉ tìm được thứ bạn đã ghi"* | Nhãn ghi rõ **"CHƯA LƯU"** + *"AI đoán từ chữ trong note"* | *"Mình chọn theo ngày ghi và lịch môn — mình không biết bạn đã thuộc hay chưa"* |
-| **Evidence / uncertainty** | Chip nguồn từng ý (`Note 04/08 · Notepad`); khi yếu thì nói rõ chắc mấy ý, hoặc bỏ tổng hợp trả về note thô | Hiện **lý do đoán**; khi mơ hồ đưa **2 nhãn để user chọn**, không tự chốt | Thẻ ghi nguồn + ngày + **lý do đẩy**; không chắc thì đẩy thẻ nhẹ, không tóm tắt sẵn |
-| **Control & recovery** | Bấm nguồn → note gốc · xem note thô · hỏi lại · escalation. **Task hoàn thành được kể cả khi AI sai** | Sửa/gỡ nhãn, hoàn tác · **bắt buộc giữ đường tìm note độc lập với nhãn** (theo ngày / theo nguồn) | Hoãn · đã thuộc · tắt theo chủ đề · tắt hẳn · **danh sách "thẻ đã bỏ qua"** chống mất vĩnh viễn |
+| **Capability / limit nói bằng gì** | *"Mình tìm trong 12 note của bạn, không tìm trên internet"* + *"chỉ tìm được thứ bạn đã ghi"* | Nhãn ghi rõ **"CHƯA LƯU"** + *"AI đoán từ chữ trong note"* | *"Mình chọn theo ngày ghi và lịch môn — mình không biết bạn đã thuộc hay chưa"* + ở màn hình cuối: *"Mình chỉ biết bạn đã **bấm** gì trên thẻ"* |
+| **Evidence / uncertainty** | Chip nguồn từng ý (`Note 04/08 · Notepad`); khi yếu thì nói rõ chắc mấy ý, hoặc bỏ tổng hợp trả về note thô | Hiện **lý do đoán**; khi mơ hồ đưa **2 nhãn để user chọn**, không tự chốt | Mỗi flashcard truy được về **đúng một note gốc** (chip nguồn ở mặt sau) + **lý do đẩy** + lý do chọn từng thẻ; note thiếu thì mặt sau nói thẳng *"bạn chưa ghi"*, **không bịa đáp án** |
+| **Control & recovery** | Bấm nguồn → note gốc · xem note thô · hỏi lại · escalation. **Task hoàn thành được kể cả khi AI sai** | Sửa/gỡ nhãn, hoàn tác · **bắt buộc giữ đường tìm note độc lập với nhãn** (theo ngày / theo nguồn) | Ba đường thoát **ngay tại C1 trước nội dung** (ôn ngay / để sau / đừng nhắc chủ đề này) · dừng giữa bộ · **gỡ thẻ lạc đề** (note gốc vẫn còn) · chip nguồn → note gốc · đổi lịch · tắt hẳn · **danh sách "thẻ đã bỏ qua"** chống mất vĩnh viễn |
 
 > **Nguyên tắc nhóm áp dụng:** AI được phép chủ động **tỉ lệ nghịch với độ khó phát hiện lỗi.**
-> **Ràng buộc bắt buộc:** Option B chỉ an toàn nếu vẫn còn đường tìm note khi nhãn sai. Nếu topic hub là lối vào duy nhất, B tự tạo lại đúng pain F8 mà nó định giải.
+> **Ràng buộc bắt buộc — Option B:** chỉ an toàn nếu vẫn còn đường tìm note khi nhãn sai. Nếu topic hub là lối vào duy nhất, B tự tạo lại đúng pain F8 mà nó định giải.
+> **Ràng buộc bắt buộc — Option C:** **không có lối vào nào để user tự mở bộ thẻ.** Không màn hình "Bộ thẻ của tôi", không nút "Ôn tập". Bộ flashcard chỉ mở ra từ một thẻ do AI tự đẩy. Vi phạm điều này, C thành app flashcard do user khởi xướng và distance check với A/B sụp đổ.
 
 ### Feedback & data check
 
@@ -84,12 +88,14 @@ USER CREATES / INITIATES ──────── USER + AI CO-CREATE ───�
 |---|---|---|---|
 | **A** | Ô hỏi + dòng phạm vi | Câu trả lời + chip nguồn + dòng uncertainty | Note gốc *(A4: escalation khi không tìm ra)* |
 | **B** | Note vừa ghi + 2 nhãn đề xuất *(CHƯA LƯU)* | Đã lưu + số note đã nối | Topic hub + khối tìm-không-theo-nhãn |
-| **C** | Màn hình chính — thẻ **tự hiện sau ~2,6 giây** | Thẻ mở rộng + tóm tắt + note gốc | Quyết định + danh sách thẻ đã bỏ qua |
+| **C** | Màn hình chính — thẻ ôn nhanh **tự hiện sau ~2,6 giây** | **Bộ 4 flashcard** — lật thẻ, chip nguồn, tự chấm | Kết quả + lịch nhắc lại + rút quyền + danh sách thẻ đã bỏ qua |
 
 **Lỗi cố ý cài vào để test đo được thật:**
 1. **A** — note 06/08 chứa *"CHƯA CHÉP"* nhưng câu trả lời nghe như đã đủ → đo citation có bảo vệ user thật không.
 2. **B** — hai nhãn xếp *Phụ thuộc hàm* **trước** *Chuẩn hoá CSDL*; chọn sai → hub chỉ có 1 note thay vì 3 → dựng lại silent failure.
 3. **C** — thẻ tự nhảy ra, tester không bấm gì → đo phản ứng thật với AI chủ động.
+4. **C** — thẻ 3 sinh từ note nhiễu *Phụ thuộc hàm* (28/07), có ghi rõ lý do → đo **silent scope creep**: AI âm thầm mở rộng chủ đề, tester có thấy và có gỡ không.
+5. **C** — thẻ 4 sinh từ note 06/08 *"CHƯA CHÉP"*, mặt sau **không có đáp án**, chỉ mở đường sang slide gốc → **Don't Act đặt bên trong một cơ chế Act**.
 
 ---
 
@@ -99,7 +105,7 @@ USER CREATES / INITIATES ──────── USER + AI CO-CREATE ───�
 |---|---|---|---|
 | 1 | Hỏi ngôn ngữ tự nhiên, AI trả lời kèm trích dẫn | Tìm lâu (F8) | → **A** |
 | 2 | AI gợi ý chủ đề lúc ghi, gom về topic hub | Rải rác (F1), tích lũy (F7) | → **B** |
-| 3 | Chủ động đẩy lại note đúng thời điểm | Quên (F4), bỏ ôn (F9) | → **C** |
+| 3 | Chủ động đẩy lại note đúng thời điểm | Quên (F4), bỏ ôn (F9) | → **C** ← nhóm chốt đi tiếp |
 | 4 | Một inbox gom note từ mọi nguồn (**user-led, no inference**) | Rải rác (F1) | không |
 | 5 | AI tóm tắt slide tại chỗ, note sinh ra đã gắn nguồn | Tóm ý tốn công (F3) | không |
 | 6 | Neo note vào dòng thời gian buổi học | Thiếu đường dẫn chủ đề → note | không |

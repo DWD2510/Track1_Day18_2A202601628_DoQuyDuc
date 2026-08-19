@@ -3,6 +3,8 @@
 **Case:** Case B — AI Notes: Personal Learning Notes (V-Learn) — *giữ nguyên case Day 17*
 **Thành viên:** Đỗ Quý Đức (2A202601628) · Nguyễn Thanh Hùng (2A202601808) · Lê Nguyễn Minh Quang (2A202601248)
 **Người viết repo này:** Đỗ Quý Đức — 2A202601628
+**Option tôi chịu trách nhiệm chính:** **Option C — Resurface without search** *(nhóm đã chốt đi tiếp)* · spec: `option-c-design.md`
+**Hình thức C đã chốt:** thẻ ôn nhanh tự đến → bộ flashcard ngắn (4 thẻ · ~2 phút)
 
 ---
 
@@ -257,6 +259,8 @@ Ba option chiếm ba dải khác nhau của cùng một trục **ai khởi xư�
 | File | Vai trò |
 |---|---|
 | `prototype/index.html` | Cả ba option + common context, dùng chung component và CSS |
+| `prototype/option-c.js` | **Option C — nguồn duy nhất.** `index.html` và `option-c-flashcard.html` cùng nạp file này |
+| `prototype/option-c-flashcard.html` | Bản C chạy riêng, dùng khi trình bày Option C một mình |
 | `prototype/fixture.js` | **Fixture dùng chung** — 12 note, context, task. Không option nào được sửa |
 | `prototype/annotations.md` | Annotation của facilitator — **không hiển thị cho tester** |
 
@@ -270,11 +274,12 @@ Ba option chiếm ba dải khác nhau của cùng một trục **ai khởi xư�
    │   A1 ô hỏi       │  B1 note vừa ghi │  C1 màn hình chính│
    │   + phạm vi      │  + 2 nhãn đề xuất│  (thẻ tự hiện)    │
    │        ↓         │        ↓         │        ↓          │
-   │   A2 câu trả lời │  B2 đã lưu +     │  C2 thẻ mở rộng   │  ← CRITICAL
-   │   + chip nguồn   │  số note đã nối  │  + note gốc       │
+   │   A2 câu trả lời │  B2 đã lưu +     │  C2 bộ 4 flashcard│  ← CRITICAL
+   │   + chip nguồn   │  số note đã nối  │  lật + tự chấm    │
    │        ↓         │        ↓         │        ↓          │
-   │   A3 note gốc    │  B3 topic hub    │  C3 quyết định    │  ← RESULT
-   │   (A4 escalation)│  + tìm-không-nhãn│  + thẻ đã bỏ qua  │
+   │   A3 note gốc    │  B3 topic hub    │  C3 kết quả +     │  ← RESULT
+   │   (A4 escalation)│  + tìm-không-nhãn│  rút quyền +      │
+   │                  │                  │  thẻ đã bỏ qua    │
    └──────────────────┴──────────────────┴──────────────────┘
                               ↓
                    ↺ Về màn hình bắt đầu (mọi lúc)
@@ -300,9 +305,12 @@ Ba option chiếm ba dải khác nhau của cùng một trục **ai khởi xư�
 | 4 | **B:** AI đưa **2 nhãn**, xếp *Phụ thuộc hàm* trước *Chuẩn hoá CSDL* | Tester đọc lý do hay bấm cái đầu tiên — đo rủi ro xác nhận cho xong |
 | 5 | **B:** chọn nhãn khác → topic hub chỉ có **1 note** thay vì 3, kèm cảnh báo | Dựng lại đúng **silent failure** đã phân tích ở Chặng 3 |
 | 6 | **B:** khối *"Tìm không theo nhãn"* (theo ngày / theo nguồn) | Ràng buộc bắt buộc từ Gate 3 — có đường tìm độc lập với nhãn |
-| 7 | **C:** thẻ **tự hiện sau ~2,6 giây**, không do tester bấm | Tái tạo trải nghiệm bị AI khởi xướng, không phải mô tả bằng lời |
+| 7 | **C:** thẻ ôn nhanh **tự hiện sau ~2,6 giây**, không do tester bấm | Tái tạo trải nghiệm bị AI khởi xướng, không phải mô tả bằng lời |
 | 8 | **C:** thẻ ghi rõ lý do đẩy + *"mình không biết bạn đã thuộc hay chưa"* | Limit có được đọc không, và có làm giảm khó chịu không |
 | 9 | **C:** danh sách *"thẻ đã bỏ qua"* | Recovery — nội dung bị dẹp nhầm không mất vĩnh viễn |
+| 10 | **C:** thẻ 3 sinh từ note nhiễu *Phụ thuộc hàm* (28/07), AI ghi rõ lý do kéo vào bộ | **Silent scope creep** — AI âm thầm mở rộng chủ đề; tester có thấy và có gỡ không |
+| 11 | **C:** thẻ 4 sinh từ note 06/08 *"CHƯA CHÉP"*, mặt sau **không có đáp án**, chỉ mở đường sang slide gốc | **Don't Act đặt bên trong một cơ chế Act** — AI được tự đẩy nội dung, không được tự viết nội dung |
+| 12 | **C:** màn hình cuối nói *"mình chỉ biết bạn đã **bấm** gì trên thẻ"* | Tín hiệu tự chấm không đáng tin — limit có được thừa nhận không |
 
 ### 4.4 Prototype annotation
 
@@ -391,6 +399,8 @@ Câu duy nhất được nói khi mở Option B, vì nó bắt đầu ở thời
 | Tester có bấm chip nguồn ở A không, và có phát hiện note *"CHƯA CHÉP"* không | A2 → A3 | Citation có thật sự bảo vệ user, hay chỉ là trang trí? |
 | Tester chọn nhãn nào ở B, và **có nhận ra topic hub thiếu note không** | B1 → B3 | Silent failure có bị phát hiện không? |
 | Câu nói đầu tiên khi thẻ ở C tự hiện | C1 | AI chủ động là tiện hay là làm phiền? |
+| Đến thẻ 3 (lạc đề) tester có nhận ra và gỡ không | C2 | AI âm thầm mở rộng chủ đề — user có thấy không? |
+| Phản ứng với thẻ 4 **không có đáp án** | C2 | Một chỗ trống được thừa nhận là hữu ích hay bực mình? |
 
 ### 5.4 Luật facilitation
 
@@ -439,13 +449,13 @@ Thứ tự option theo bảng chống order effect trong `prototype/annotations.
 
 | Thành viên | Tester | Thứ tự option | Feedback Note |
 |---|---|---|---|
-| **Đỗ Quý Đức** *(phụ trách Option A)* | Tester 1 — ngoài nhóm | A → B → C | `prototype-feedback-note.md` |
-| **Nguyễn Thanh Hùng** *(phụ trách Option B)* | Tester 2 — ngoài nhóm | B → C → A | `feedback/feedback-note-hung.md` |
-| **Lê Nguyễn Minh Quang** *(phụ trách Option C)* | Tester 3 — ngoài nhóm | C → A → B | `feedback/feedback-note-quang.md` |
+| **Đỗ Quý Đức** *(phụ trách **Option C**)* | Tester 1 — ngoài nhóm | A → B → C | `prototype-feedback-note.md` |
+| **Nguyễn Thanh Hùng** *(⚠️ phân công lại — chờ xác nhận)* | Tester 2 — ngoài nhóm | B → C → A | `feedback/feedback-note-hung.md` |
+| **Lê Nguyễn Minh Quang** *(⚠️ phân công lại — chờ xác nhận)* | Tester 3 — ngoài nhóm | C → A → B | `feedback/feedback-note-quang.md` |
 
 **Luật đã áp:**
 - Ba tester là ba người **khác nhóm**, ưu tiên người có relevant context (đang đi học, có ghi chú bài).
-- Mỗi facilitator chạy **cả A/B/C** — kể cả người build Option A cũng phải test cả ba.
+- Mỗi facilitator chạy **cả A/B/C** — kể cả người build Option C cũng phải test cả ba. Chốt C **không** cho phép bỏ A và B ra khỏi buổi test: nếu chỉ cho tester xem C thì không còn gì để so, và Gate 2 mất ý nghĩa.
 - Thứ tự xoay vòng để chống order effect.
 - Copy `feedback/TEMPLATE.md` thành file riêng cho mỗi người; không ba người ghi chung một file.
 
