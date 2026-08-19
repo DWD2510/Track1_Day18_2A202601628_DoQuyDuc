@@ -1,7 +1,7 @@
 # Three-option Design Sheet — Day 18
 
 **Case B — AI Notes: Personal Learning Notes (V-Learn)** · giữ nguyên case Day 17
-Nhóm: Trần Thanh Huyền · Thiều Thị Ngọc Ánh · Đỗ Quý Đức · Nguyễn Thanh Hùng
+Nhóm: Đỗ Quý Đức *(Option A)* · Nguyễn Thanh Hùng *(Option B)* · Lê Nguyễn Minh Quang *(Option C)*
 
 > Bản đầy đủ kèm quá trình làm từng chặng: `day18-lab.md`
 

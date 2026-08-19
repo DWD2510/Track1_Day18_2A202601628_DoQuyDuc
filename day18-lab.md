@@ -1,7 +1,7 @@
 # Track 1 — Day 18: Three Solution Options & A/B/C Prototype Test
 
 **Case:** Case B — AI Notes: Personal Learning Notes (V-Learn) — *giữ nguyên case Day 17*
-**Thành viên:** Trần Thanh Huyền (2A202601578) · Thiều Thị Ngọc Ánh (2A22601864) · Đỗ Quý Đức (2A202601628) · Nguyễn Thanh Hùng
+**Thành viên:** Đỗ Quý Đức (2A202601628) · Nguyễn Thanh Hùng (2A202601808) · Lê Nguyễn Minh Quang (2A202601248)
 **Người viết repo này:** Đỗ Quý Đức — 2A202601628
 
 ---
@@ -15,8 +15,8 @@
 | Practice Note | User đã thực sự làm/nói gì? | Điều nhóm đang diễn giải |
 |---|---|---|
 | **1 — Đỗ Quý Đức**<br>P1: MHV 2A202601870<br>17/08/2026, ~2'06" | • Ghi note khó của slide V-Learn vào **Notepad** *và* **app ghi chú trên điện thoại** (F1)<br>• Mỗi lần ghi ~**1–2 phút** (F2)<br>• Phần tốn công nhất: **"tóm gọn lại ý chính của slide"** (F3)<br>• *"Bình thường mình sẽ quên mất."* (F4)<br>• Workaround: **"Mình đưa nội dung cho AI làm"** — vì *"AI vừa nhanh, vừa tiện, và mình cũng không cần xem lại nhiều"* (F5, F6)<br>• *"Dần dần, nội dung ngày càng nhiều lên. Khi cần ôn lại, mình phải tìm lại nội dung cần học nên rất mất thời gian. Có lúc mình cũng không tìm được."* (F7, F8)<br>• Đã có lần **định ôn lại nhưng bỏ qua** (F9) | • Nhóm suy ra note nằm rải rác **gây ra** việc tìm lâu — user không nói nhân quả này, chỉ kể hai việc cạnh nhau<br>• Nhóm suy ra "quên mất" là do thiếu cơ chế nhắc, chứ user không giải thích vì sao quên<br>• Nhóm suy ra F9 (bỏ ôn) là hậu quả của F8 (không tìm được) — user kể liền mạch nhưng không nói thẳng "vì không tìm được nên tôi bỏ"<br>• **Chưa hỏi được:** tìm không thấy thì làm gì tiếp |
-| **2 — _(chờ điền)_** | _Chép nguyên văn hành vi/quote từ Practice Note của thành viên thứ hai._ | _Phần nhóm suy ra._ |
-| **3 — _(chờ điền)_** | _Chép nguyên văn hành vi/quote từ Practice Note của thành viên thứ ba._ | _Phần nhóm suy ra._ |
+| **2 — Nguyễn Thanh Hùng** *(chờ điền)* | _Chép nguyên văn hành vi/quote từ Practice Note của thành viên thứ hai._ | _Phần nhóm suy ra._ |
+| **3 — Lê Nguyễn Minh Quang** *(chờ điền)* | _Chép nguyên văn hành vi/quote từ Practice Note của thành viên thứ ba._ | _Phần nhóm suy ra._ |
 
 > ⚠️ Repo cá nhân này hiện chỉ có Note 1. Note 2 và 3 cần lấy từ repo của thành viên khác trước khi nộp bản nhóm. **Không được** suy đoán nội dung hai note đó.
 
@@ -440,8 +440,8 @@ Thứ tự option theo bảng chống order effect trong `prototype/annotations.
 | Thành viên | Tester | Thứ tự option | Feedback Note |
 |---|---|---|---|
 | **Đỗ Quý Đức** *(phụ trách Option A)* | Tester 1 — ngoài nhóm | A → B → C | `prototype-feedback-note.md` |
-| _(chờ nhóm chốt — phụ trách Option B)_ | Tester 2 — ngoài nhóm | B → C → A | `feedback/feedback-note-<tên>.md` |
-| _(chờ nhóm chốt — phụ trách Option C)_ | Tester 3 — ngoài nhóm | C → A → B | `feedback/feedback-note-<tên>.md` |
+| **Nguyễn Thanh Hùng** *(phụ trách Option B)* | Tester 2 — ngoài nhóm | B → C → A | `feedback/feedback-note-hung.md` |
+| **Lê Nguyễn Minh Quang** *(phụ trách Option C)* | Tester 3 — ngoài nhóm | C → A → B | `feedback/feedback-note-quang.md` |
 
 **Luật đã áp:**
 - Ba tester là ba người **khác nhóm**, ưu tiên người có relevant context (đang đi học, có ghi chú bài).

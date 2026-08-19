@@ -179,7 +179,7 @@ Bản đầy đủ: `ai-support-log.md`. Tóm tắt:
 
 - [ ] Practice Note 2 và 3 từ đồng đội (Chặng 1)
 - [ ] Nhóm xác nhận Solution Parking Lot và nguyên lý Day 16 (hai chỗ ⚠️)
-- [ ] Nhóm chốt phân công option cho Huyền / Ngọc Ánh / Hùng (Đức: Option A ✅)
+- [x] Phân công option: Đức — A · Hùng — B · Quang — C ✅
 - [ ] Người ngoài nhóm thử prototype trước khi test chính thức
 - [ ] Test với 3 tester ngoài nhóm → 3 Feedback Note
 - [ ] Group Feedback Synthesis + một Next Change + Still Unproven
